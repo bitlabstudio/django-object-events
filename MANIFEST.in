@@ -1,0 +1,8 @@
+include AUTHORS
+include LICENSE
+include DESCRIPTION
+include CHANGELOG.txt
+include README.md
+graft object_events 
+prune object_events/tests/coverage
+recursive-exclude object_events *.orig *.pyc

@@ -1,0 +1,20 @@
+# Install these requirements if you wish to contribute to this project.
+
+# ===========================================================================
+# Packages essential to this app. Needed by anyone who wants to use this app.
+# ===========================================================================
+Django==1.4.2
+django-libs==0.16
+South
+
+
+# ==============================================================
+# Packages needed for running the tests. Needed by contributors.
+# ==============================================================
+factory_boy
+nose
+django-nose
+coverage
+django-coverage
+django-jasmine
+selenium
