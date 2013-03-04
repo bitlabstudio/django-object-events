@@ -1,7 +1,7 @@
 Django Object Events
 ====================
 
-Generic app for creating events that can be shown to the user in a 
+Generic app for creating events that can be shown to the user in a
 notifications list.
 
 Think about Facebook. You got all kinds of events:
@@ -36,6 +36,7 @@ You need at least the following packages in your virtualenv:
 
 * Django 1.4
 * South
+* Django Mailer
 
 
 Installation
@@ -64,7 +65,65 @@ Run the south migrations to create the app's database tables::
 Usage
 -----
 
-TODO
+TODO (Aggregation Class, Cronjobs)
+
+
+Settings
+--------
+
+OBJECT_EVENTS_USER_AGGREGATION
+++++++++++++++++++++++++++++++
+
+Default: 'test_app.TestAggregation'
+
+This is a class, which lets you create custom function to aggregate all users,
+which should be notified. Therefore you can e.g. build a user profile, which
+contains an interval or rrule setting.
+
+The following functions can be defined::
+
+    get_realtime_users()
+    get_daily_users()
+    get_weekly_users()
+    get_monthly_users()
+
+Always return a list of primary keys of Django's User model.
+
+
+OBJECT_EVENTS_REALTIME_MINUTES
+++++++++++++++++++++++++++++++
+
+Default: 2
+
+The management command ``./manage.py send_event_emails realtime`` will process
+object_events which are not older than ``2`` minutes.
+
+
+OBJECT_EVENTS_DAILY
++++++++++++++++++++
+
+Default: 1
+
+The management command ``./manage.py send_event_emails daily`` will process
+object_events which are not older than ``1`` day.
+
+
+OBJECT_EVENTS_WEEKLY
+++++++++++++++++++++
+
+Default: 7
+
+The management command ``./manage.py send_event_emails weekly`` will process
+object_events which are not older than ``7`` days.
+
+
+OBJECT_EVENTS_MONTHLY_DATE
+++++++++++++++++++++++++++
+
+Default: 1
+
+The management command ``./manage.py send_event_emails monthly`` will process
+object_events which are not older than the ``1st`` of the current month.
 
 
 Roadmap

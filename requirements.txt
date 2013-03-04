@@ -3,8 +3,9 @@
 # ===========================================================================
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
-Django==1.4.2
+Django==1.4.5
 django-libs==0.16
+-e git+git://github.com/jtauber/django-mailer.git@af91e3b3556ea1a0ae9cb2c5b6520bacdab6a9fa#egg=mailer
 South
 
 
@@ -12,6 +13,7 @@ South
 # Packages needed for running the tests. Needed by contributors.
 # ==============================================================
 factory_boy
+flake8
 nose
 django-nose
 coverage

@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from django_libs.tests.factories import UserFactory
 
 from ..models import ObjectEvent, ObjectEventType
-from .test_app.models import DummyModel
+from .test_app.models import DummyModel, TestProfile
 
 
 class DummyModelFactory(factory.Factory):
@@ -16,10 +16,17 @@ class DummyModelFactory(factory.Factory):
     name = 'Foobar'
 
 
+class TestProfileFactory(factory.Factory):
+    """Factory for the ``TestProfile`` model."""
+    FACTORY_FOR = TestProfile
+
+    user = factory.SubFactory(UserFactory)
+
+
 class ObjectEventTypeFactory(factory.Factory):
     FACTORY_FOR = ObjectEventType
 
-    title = 'event_type'
+    title = factory.Sequence(lambda x: 'event_type{0}'.format(x))
 
 
 class ObjectEventFactory(factory.Factory):

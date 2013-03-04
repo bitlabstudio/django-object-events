@@ -13,6 +13,5 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'', include('unshorten.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

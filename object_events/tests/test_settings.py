@@ -52,6 +52,7 @@ EXTERNAL_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django_nose',
+    'mailer',
 ]
 
 INTERNAL_APPS = [
@@ -62,3 +63,30 @@ INTERNAL_APPS = [
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 
 COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
+
+
+# email settings
+ADMINS = (
+    ('YOUR_NAME', 'YOUR_EMAIL'),
+)
+FROM_EMAIL = ADMINS[0][1]
+
+MAILER_EMAIL_BACKEND = 'django_libs.test_email_backend.EmailBackend'
+TEST_EMAIL_BACKEND_RECIPIENTS = ADMINS
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = FROM_EMAIL
+EMAIL_HOST_PASSWORD = "YOUR_PASSWORD"
+EMAIL_PORT = 587
+
+DEFAULT_FROM_EMAIL = FROM_EMAIL
+SERVER_EMAIL = FROM_EMAIL
+EMAIL_USE_TLS = True
+
+
+# django-event-object-specific settings
+OBJECT_EVENTS_USER_AGGREGATION = 'test_app.TestAggregation'
+OBJECT_EVENTS_REALTIME_MINUTES = 2
+OBJECT_EVENTS_DAILY = 1
+OBJECT_EVENTS_WEEKLY = 7
+OBJECT_EVENTS_MONTHLY_DATE = 1

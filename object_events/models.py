@@ -8,6 +8,25 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 
+"""
+Interval the user will be notified.
+
+  realtime -> e.g. minute-by-minute
+  daily    -> e.g. every day at midnight
+  weekly   -> e.g. every sunday at 3 p.m.
+  monthly  -> e.g. every last sunday of a month at 5 p.m.
+
+You can change this dates in your settings and/or define your cronjobs.
+
+"""
+NOTIFICATION_INTERVALS = (
+    ('realtime', _('realtime')),
+    ('daily', _('daily')),
+    ('weekly', _('weekly')),
+    ('monthly', _('monthly')),
+)
+
+
 class ObjectEventType(models.Model):
     """
     Masterdata table containing event types.
@@ -16,11 +35,15 @@ class ObjectEventType(models.Model):
       notification message to display or which partial to render.
 
     """
-    title = models.CharField(
+    title = models.SlugField(
         max_length=256,
         unique=True,
         verbose_name=_('Title'),
+        help_text=_('Please use a slugified name, e.g. "student-news".'),
     )
+
+    def __unicode__(self):
+        return self.title
 
 
 class ObjectEvent(models.Model):
@@ -31,6 +54,8 @@ class ObjectEvent(models.Model):
       event was created by no user but automatically.
     :creation_date: Creation date of this event.
     :type: Type of this event.
+    :email_sent: True, if user has received this event via email.
+    :read_by_user: True, if user has noticed this event.
     :content_object: Generic foreign key to the object this event is attached
       to. Leave this empty if it is a global event.
     :event_content_object: Generic foreign key to the object that has been
@@ -56,6 +81,16 @@ class ObjectEvent(models.Model):
         related_name='events',
     )
 
+    email_sent = models.BooleanField(
+        verbose_name=_('Has been sent in an email?'),
+        default=False,
+    )
+
+    read_by_user = models.BooleanField(
+        verbose_name=_('Has been noticed by the user?'),
+        default=False,
+    )
+
     # Generic FK to the object this event is attached to
     content_type = models.ForeignKey(
         ContentType,
@@ -76,7 +111,7 @@ class ObjectEvent(models.Model):
         'event_content_type', 'event_object_id')
 
     @staticmethod
-    def create_event(user, content_object, event_content_object, type):
+    def create_event(user, content_object, event_content_object=None, type=''):
         """
         Creates an event for the given user, object and type.
 
@@ -89,15 +124,13 @@ class ObjectEvent(models.Model):
         :type: String representing the type of this event.
 
         """
-        try:
-            type = ObjectEventType.objects.get(title=type)
-        except ObjectEventType.DoesNotExist:
-            type = ObjectEventType.objects.create(title=type)
+        type, created = ObjectEventType.objects.get_or_create(title=type)
 
         obj = ObjectEvent(user=user, content_object=content_object, type=type)
         if event_content_object is not None:
             obj.event_content_object = event_content_object
         obj.save()
+        return obj
 
     def get_timesince(self):
         delta = (now() - self.creation_date)
