@@ -110,7 +110,7 @@ class ObjectEvent(models.Model):
     user = models.ForeignKey(
         'auth.User',
         verbose_name=_('User'),
-        related_name='events',
+        related_name='object_events',
         null=True, blank=True,
     )
 
