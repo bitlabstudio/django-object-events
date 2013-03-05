@@ -66,9 +66,7 @@ COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 
 # email settings
-ADMINS = (
-    ('YOUR_NAME', 'YOUR_EMAIL'),
-)
+ADMINS = (('YOUR_NAME', 'YOUR_EMAIL'), )
 FROM_EMAIL = ADMINS[0][1]
 
 MAILER_EMAIL_BACKEND = 'django_libs.test_email_backend.EmailBackend'

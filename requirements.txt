@@ -5,9 +5,8 @@
 # ===========================================================================
 Django==1.4.5
 django-libs==0.16
--e git+git://github.com/jtauber/django-mailer.git@af91e3b3556ea1a0ae9cb2c5b6520bacdab6a9fa#egg=mailer
+-e git+git://github.com/pinax/django-mailer.git@919805e25fc18b06487b25414d4e5d5e05a92108#egg=mailer
 South
-
 
 # ==============================================================
 # Packages needed for running the tests. Needed by contributors.

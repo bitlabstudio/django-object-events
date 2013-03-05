@@ -65,7 +65,58 @@ Run the south migrations to create the app's database tables::
 Usage
 -----
 
-TODO (Aggregation Class, Cronjobs)
+If you want to use this app without sending event notifications you don't have
+to create settings or stuff. Simply use it, it's intuitive =)
+
+For email support make sure to install ``django-mailer`` (see requirements.txt)
+
+Make sure to add all email-related settings::
+
+    ADMINS = (('YOUR_NAME', 'YOUR_EMAIL'), )
+    FROM_EMAIL = ADMINS[0][1]
+
+    MAILER_EMAIL_BACKEND = 'django_libs.test_email_backend.EmailBackend'
+    TEST_EMAIL_BACKEND_RECIPIENTS = ADMINS
+
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = FROM_EMAIL
+    EMAIL_HOST_PASSWORD = "YOUR_PASSWORD"
+    EMAIL_PORT = 587
+
+    DEFAULT_FROM_EMAIL = FROM_EMAIL
+    SERVER_EMAIL = FROM_EMAIL
+    EMAIL_USE_TLS = True
+
+Of course, change it to your email address and your email server settings.
+
+Since the app is using intervals in sending email notifications we need to find
+all users, which should be delivered with fresh mails. For that purpose take a
+look at the setting ``OBJECT_EVENTS_USER_AGGREGATION`` right below.
+
+Now, back to me. If you want to use this aggregation class you will have to
+create a custom profile model with a key to Django's User model and an interval
+field, which provides these four options (realtime, daily, weekly, monthly).
+
+Use this profile as the general user profile (see setting AUTH_PROFILE_MODULE).
+
+You can also change or extend the aggregation class. Just make sure you follow
+the instructions below.
+
+Now, call the management command manually or e.g. with cronjobs. Manually::
+
+    ./manage.py send_event_emails realtime
+
+With cronjobs for example:
+
+    * * * * * $HOME/webapps/$DJANGO_APP_NAME/myproject/manage.py send_event_emails realtime > $HOME/mylogs/cron/send_event_emails.log 2>&1
+
+Huh, cronjobs? If you are a bit server savy connect to your server and type in
+``EDITOR=nano crontab -e``.
+
+Whatever, maybe you want to try it manually first.
+Now you're free to work with this app, like, appending it to your project and
+connect your models to it via post_save signals. Whatever you will do, have fun
+with it!
 
 
 Settings
