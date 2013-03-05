@@ -5,8 +5,12 @@ from django.utils.timezone import now, timedelta
 
 from django_libs.tests.factories import UserFactory
 
-from ..models import ObjectEvent, ObjectEventType
-from .factories import ObjectEventFactory, ObjectEventTypeFactory
+from ..models import ObjectEvent, ObjectEventType, ObjectEventSettings
+from .factories import (
+    ObjectEventFactory,
+    ObjectEventTypeFactory,
+    ObjectEventSettingsFactory,
+)
 
 
 class ObjectEventTypeTestCase(TestCase):
@@ -56,3 +60,23 @@ class ObjectEventTestCase(TestCase):
         object_event.creation_date = now() - timedelta(days=365)
         self.assertEqual(object_event.get_timesince(), date(
             object_event.creation_date, 'd F Y'))
+
+
+class ObjectEventSettingsTestCase(TestCase):
+    """Tests for the ``ObjectEventSettings`` model class."""
+    def test_model(self):
+        """Should be able to instantiate and save the model."""
+        obj = ObjectEventSettingsFactory()
+        self.assertTrue(obj.pk)
+
+    def test_save(self):
+        """Should allow only one instance."""
+        obj = ObjectEventSettings()
+        self.assertFalse(obj.pk)
+
+        obj.save()
+        self.assertTrue(obj.pk)
+        self.assertEqual(ObjectEventSettings.objects.all().count(), 1)
+        obj = ObjectEventSettings()
+        obj.save()
+        self.assertEqual(ObjectEventSettings.objects.all().count(), 1)

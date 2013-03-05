@@ -1,4 +1,4 @@
-=== 0.2 (ongoing) ===
+=== (ongoing) ===
 
 - Added notification fields to ObjectEvent model.
 - Added management command to send email notification for each new event.

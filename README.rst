@@ -90,15 +90,6 @@ The following functions can be defined::
 Always return a list of primary keys of Django's User model.
 
 
-OBJECT_EVENTS_REALTIME_MINUTES
-++++++++++++++++++++++++++++++
-
-Default: 2
-
-The management command ``./manage.py send_event_emails realtime`` will process
-object_events which are not older than ``2`` minutes.
-
-
 OBJECT_EVENTS_DAILY
 +++++++++++++++++++
 

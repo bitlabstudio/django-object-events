@@ -19,7 +19,7 @@ from django.utils import timezone
 
 from django_libs.utils_email import send_email
 
-from ...models import ObjectEvent
+from ...models import ObjectEvent, ObjectEventSettings
 
 
 class Command(BaseCommand):
@@ -40,8 +40,8 @@ class Command(BaseCommand):
         """Handles the send_event_emails admin command."""
         # Check if there is an aggregation class defined.
         if not getattr(settings, 'OBJECT_EVENTS_USER_AGGREGATION', False):
-            print('You need to set OBJECT_EVENTS_USER_AGGREGATION in your'
-                  ' project settings.')
+            print('You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
+                  ' your project settings.')
             return
         try:
             app, app_class = settings.OBJECT_EVENTS_USER_AGGREGATION.split('.')
@@ -68,8 +68,10 @@ class Command(BaseCommand):
             except AttributeError:
                 print('Function get_realtime_users() not defined.')
                 return
-            min_date = timezone.now() - timezone.timedelta(
-                minutes=settings.OBJECT_EVENTS_REALTIME_MINUTES)
+            object_event_settings = ObjectEventSettings.objects.get_settings()
+            # If there's no last run registered, cover the last week.
+            min_date = (object_event_settings.last_run
+                        or timezone.now() - timezone.timedelta(days=7))
         elif 'daily' in args:
             try:
                 users = aggregation().get_daily_users()
@@ -122,7 +124,11 @@ class Command(BaseCommand):
                 email_context.update({
                     '{0}'.format(object_event.type.title): [object_event],
                 })
+            object_event.email_sent = True
+            object_event.save()
         # Send email even for the last user in the queryset, who cannot have
         # a follower
         self.send_mail_to_user(email_context, current_user.email)
+
+        ObjectEventSettings.objects.run_finished()
         print('Send emails for {0} events.'.format(object_events.count()))
