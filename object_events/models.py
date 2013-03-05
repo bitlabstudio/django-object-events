@@ -18,7 +18,7 @@ Interval the user will be notified.
   weekly   -> e.g. every sunday at 3 p.m.
   monthly  -> e.g. every last sunday of a month at 5 p.m.
 
-You can change this dates in your settings and/or define your cronjobs.
+You can configure this dates by defining your cronjobs.
 
 """
 NOTIFICATION_INTERVALS = (

@@ -20,25 +20,48 @@ class SendEventEmailsTestCase(TestCase):
                                                    'UserAggregation')
         settings.AUTH_PROFILE_MODULE = 'test_app.TestProfile'
 
-    def test_general_imports_and_definitions(self):
+    @raises(SystemExit)
+    def test_missing_aggregation_class(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = False
         self.assertFalse(call_command('send_event_emails'))
 
+    @raises(SystemExit)
+    def test_wrong_aggregation_definition(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test'
         self.assertFalse(call_command('send_event_emails'))
 
+    @raises(SystemExit)
+    def test_wrong_aggregation_app(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test.Test'
         self.assertFalse(call_command('send_event_emails'))
 
+    @raises(SystemExit)
+    def test_wrong_aggregation_class(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.Test'
         self.assertFalse(call_command('send_event_emails'))
 
+    @raises(SystemExit)
+    def test_missing_aggregation_function_realtime(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.EmptyAggregation'
         self.assertFalse(call_command('send_event_emails', 'realtime'))
+
+    @raises(SystemExit)
+    def test_missing_aggregation_function_daily(self):
+        settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.EmptyAggregation'
         self.assertFalse(call_command('send_event_emails', 'daily'))
+
+    @raises(SystemExit)
+    def test_missing_aggregation_function_weekly(self):
+        settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.EmptyAggregation'
         self.assertFalse(call_command('send_event_emails', 'weekly'))
+
+    @raises(SystemExit)
+    def test_missing_aggregation_function_monthly(self):
+        settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.EmptyAggregation'
         self.assertFalse(call_command('send_event_emails', 'monthly'))
 
+    @raises(SystemExit)
+    def test_missing_argument(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = ('object_events.'
                                                    'UserAggregation')
         self.assertFalse(call_command('send_event_emails'))

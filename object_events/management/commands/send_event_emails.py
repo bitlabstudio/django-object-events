@@ -8,12 +8,12 @@ Options:
   weekly   -> e.g. every sunday at 3 p.m.
   monthly  -> e.g. every last sunday of a month at 5 p.m.
 
-You can change this dates in your settings and/or define your cronjobs.
+You can configure this dates by defining your cronjobs.
 
 """
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.db.models import get_app
 
 from django_libs.utils_email import send_email
@@ -39,58 +39,52 @@ class Command(BaseCommand):
         """Handles the send_event_emails admin command."""
         # Check if there is an aggregation class defined.
         if not getattr(settings, 'OBJECT_EVENTS_USER_AGGREGATION', False):
-            print('You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
-                  ' your project settings.')
-            return
+            raise CommandError(
+                'You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
+                ' your project settings.')
         try:
             app, app_class = settings.OBJECT_EVENTS_USER_AGGREGATION.split('.')
         except ValueError:
-            print('app_label and app_class should be separated by a dot in'
-                  ' the OBJECT_EVENTS_USER_AGGREGATION setting.')
-            return
+            raise CommandError(
+                'app_label and app_class should be separated by a dot in'
+                ' the OBJECT_EVENTS_USER_AGGREGATION setting.')
         try:
             aggregation_app = get_app(app)
         except (ImportError, ImproperlyConfigured):
-            print('Unable to load defined app in the'
-                  ' OBJECT_EVENTS_USER_AGGREGATION setting.')
-            return
+            raise CommandError('Unable to load defined app in the'
+                               ' OBJECT_EVENTS_USER_AGGREGATION setting.')
         try:
             aggregation = aggregation_app.__getattribute__(app_class)
         except AttributeError:
-            print('Unable to load defined class in the'
-                  ' OBJECT_EVENTS_USER_AGGREGATION setting.')
-            return
+            raise CommandError('Unable to load defined class in the'
+                               ' OBJECT_EVENTS_USER_AGGREGATION setting.')
         # Check interval argument and functions in the aggregation class.
         if 'realtime' in args:
             try:
                 users = aggregation().get_realtime_users()
             except AttributeError:
-                print('Function get_realtime_users() not defined.')
-                return
+                raise CommandError('Function get_realtime_users() not'
+                                   ' defined.')
         elif 'daily' in args:
             try:
                 users = aggregation().get_daily_users()
             except AttributeError:
-                print('Function get_daily_users() not defined.')
-                return
+                raise CommandError('Function get_daily_users() not defined.')
         elif 'weekly' in args:
             try:
                 users = aggregation().get_weekly_users()
             except AttributeError:
-                print('Function get_weekly_users() not defined.')
-                return
+                raise CommandError('Function get_weekly_users() not defined.')
         elif 'monthly' in args:
             try:
                 users = aggregation().get_monthly_users()
             except AttributeError:
-                print('Function get_monthly_users() not defined.')
-                return
+                raise CommandError('Function get_monthly_users() not defined.')
         else:
-            print('Please provide a valid interval argument (realtime, daily,'
-                  ' weekly, monthly)')
-            return
+            raise CommandError('Please provide a valid interval argument'
+                               ' (realtime, daily, weekly, monthly)')
         if not users:
-            print('No users to send a mail.')
+            print('No users to send an email.')
             return
         # Get all events , which hasn't been sent yet.
         object_events = ObjectEvent.objects.filter(
