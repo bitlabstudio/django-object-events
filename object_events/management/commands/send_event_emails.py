@@ -99,6 +99,6 @@ class Command(BaseCommand):
         # a follower
         if email_context:
             self.send_mail_to_user(email_context, current_user.email)
-        print('The command took {0} seconds to finish. Send {1} emails for {2}'
+        print('The command took {0} seconds to finish. Sent {1} emails for {2}'
               ' events.'.format((timezone.now() - start_of_command).seconds,
                                 self.sent_emails, object_events.count()))
