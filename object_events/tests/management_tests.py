@@ -99,12 +99,13 @@ class SendEventEmailsTestCase(TestCase):
         self.assertFalse(call_command('send_event_emails', 'realtime'))
         self.assertEqual(Message.objects.all().count(), 1)
         ObjectEventFactory(user=profile.user)
-        ObjectEventFactory(user=profile.user, type=first_object_event.type)
+        ObjectEventFactory(user=profile.user,
+                           event_type=first_object_event.event_type)
         other_profile = TestProfileFactory(interval='realtime')
         ObjectEventFactory(user=other_profile.user,
-                           type=first_object_event.type)
+                           event_type=first_object_event.event_type)
         ObjectEventFactory(user=other_profile.user,
-                           type=first_object_event.type)
+                           event_type=first_object_event.event_type)
         self.assertFalse(call_command('send_event_emails', 'realtime'))
         self.assertEqual(Message.objects.all().count(), 3)
 

@@ -28,7 +28,7 @@ class Command(BaseCommand):
         """Function to send the digest to the user."""
         send_email(
             '',
-            {'types': email_context},
+            {'event_types': email_context},
             'object_events/email/subject.html',
             'object_events/email/body.html',
             'object_events/email/body_plain.html',
@@ -87,12 +87,12 @@ class Command(BaseCommand):
                 self.send_mail_to_user(email_context, current_user.email)
                 email_context = {}
             current_user = object_event.user
-            if email_context.get(object_event.type.title):
-                email_context[object_event.type.title].append(object_event)
+            if email_context.get(object_event.event_type.title):
+                email_context[object_event.event_type.title].append(
+                    object_event)
             else:
-                email_context.update({
-                    '{0}'.format(object_event.type.title): [object_event],
-                })
+                email_context.update({'{0}'.format(
+                    object_event.event_type.title): [object_event]})
             object_event.email_sent = True
             object_event.save()
         # Send email even for the last user in the queryset, who cannot have

@@ -21,7 +21,7 @@ class ObjectEventAdmin(admin.ModelAdmin):
     user_email.short_description = 'User'
 
     def type_title(self, obj):
-        return obj.type.title
+        return obj.event_type.title
     type_title.short_description = 'Type'
 
 

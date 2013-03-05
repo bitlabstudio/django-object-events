@@ -34,5 +34,5 @@ class ObjectEventFactory(factory.Factory):
 
     user = factory.SubFactory(UserFactory)
     creation_date = factory.LazyAttribute(lambda x: now())
-    type = factory.SubFactory(ObjectEventTypeFactory)
+    event_type = factory.SubFactory(ObjectEventTypeFactory)
     content_object = factory.SubFactory(DummyModelFactory)

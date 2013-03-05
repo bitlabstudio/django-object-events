@@ -2,6 +2,8 @@
 
 - Added notification fields to ObjectEvent model.
 - Added management command to send email notification for each new event.
+- BACKWARDS INCOMPATIBLE: Changed parameter name form type to event_type for
+  create_event method
 
 === 0.1 ===
 

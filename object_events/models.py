@@ -97,7 +97,7 @@ class ObjectEvent(models.Model):
     :user: FK to the user who created this event. Leave this empty if this
       event was created by no user but automatically.
     :creation_date: Creation date of this event.
-    :type: Type of this event.
+    :event_type: Type of this event.
     :email_sent: True, if user has received this event via email.
     :read_by_user: True, if user has noticed this event.
     :content_object: Generic foreign key to the object this event is attached
@@ -119,7 +119,7 @@ class ObjectEvent(models.Model):
         verbose_name=_('Creation date'),
     )
 
-    type = models.ForeignKey(
+    event_type = models.ForeignKey(
         ObjectEventType,
         verbose_name=_('Type'),
         related_name='events',
@@ -155,7 +155,8 @@ class ObjectEvent(models.Model):
         'event_content_type', 'event_object_id')
 
     @staticmethod
-    def create_event(user, content_object, event_content_object=None, type=''):
+    def create_event(user, content_object, event_content_object=None,
+                     event_type=''):
         """
         Creates an event for the given user, object and type.
 
@@ -165,12 +166,13 @@ class ObjectEvent(models.Model):
         :param user: The user who created this event.
         :param content_object: The object this event is attached to.
         :param event_content_object: The object that was created by this event.
-        :type: String representing the type of this event.
+        :event_type: String representing the type of this event.
 
         """
-        type, created = ObjectEventType.objects.get_or_create(title=type)
-
-        obj = ObjectEvent(user=user, content_object=content_object, type=type)
+        event_type_obj, created = ObjectEventType.objects.get_or_create(
+            title=event_type)
+        obj = ObjectEvent(user=user, content_object=content_object,
+                          event_type=event_type_obj)
         if event_content_object is not None:
             obj.event_content_object = event_content_object
         obj.save()
