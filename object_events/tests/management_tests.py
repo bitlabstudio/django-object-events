@@ -1,15 +1,24 @@
 """Tests for the management commands of the ``object_events`` app."""
 from django.conf import settings
+from django.contrib.auth.models import SiteProfileNotAvailable
 from django.core.management import call_command
 from django.test import TestCase
 
 from mailer.models import Message
+from nose.tools import raises
 
 from .factories import ObjectEventFactory, TestProfileFactory
+from ..models import UserAggregation
 
 
 class SendEventEmailsTestCase(TestCase):
     """Tests for the ``send_event_emails`` management command."""
+    longMessage = True
+
+    def setUp(self):
+        settings.OBJECT_EVENTS_USER_AGGREGATION = ('object_events.'
+                                                   'UserAggregation')
+        settings.AUTH_PROFILE_MODULE = 'test_app.TestProfile'
 
     def test_general_imports_and_definitions(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = False
@@ -30,8 +39,34 @@ class SendEventEmailsTestCase(TestCase):
         self.assertFalse(call_command('send_event_emails', 'weekly'))
         self.assertFalse(call_command('send_event_emails', 'monthly'))
 
-        settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.TestAggregation'
+        settings.OBJECT_EVENTS_USER_AGGREGATION = ('object_events.'
+                                                   'UserAggregation')
         self.assertFalse(call_command('send_event_emails'))
+
+    @raises(SiteProfileNotAvailable)
+    def test_missing_user_profile(self):
+        settings.AUTH_PROFILE_MODULE = False
+        UserAggregation()
+
+    @raises(SiteProfileNotAvailable)
+    def test_wrong_user_profile_definition(self):
+        settings.AUTH_PROFILE_MODULE = 'test'
+        UserAggregation()
+
+    @raises(SiteProfileNotAvailable)
+    def test_wrong_user_profile_app(self):
+        settings.AUTH_PROFILE_MODULE = 'test.Test'
+        UserAggregation()
+
+    @raises(SiteProfileNotAvailable)
+    def test_wrong_user_profile_model(self):
+        settings.AUTH_PROFILE_MODULE = 'test_app.NonExistingProfile'
+        UserAggregation()
+
+    @raises(SiteProfileNotAvailable)
+    def test_user_profile_model_without_interval_field(self):
+        settings.AUTH_PROFILE_MODULE = 'test_app.WrongTestProfile'
+        UserAggregation()
 
     def test_realtime(self):
         self.assertFalse(call_command('send_event_emails', 'realtime'))

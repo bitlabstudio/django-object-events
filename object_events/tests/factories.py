@@ -5,7 +5,7 @@ from django.utils.timezone import now
 
 from django_libs.tests.factories import UserFactory
 
-from ..models import ObjectEvent, ObjectEventType, ObjectEventSettings
+from ..models import ObjectEvent, ObjectEventType
 from .test_app.models import DummyModel, TestProfile
 
 
@@ -36,7 +36,3 @@ class ObjectEventFactory(factory.Factory):
     creation_date = factory.LazyAttribute(lambda x: now())
     type = factory.SubFactory(ObjectEventTypeFactory)
     content_object = factory.SubFactory(DummyModelFactory)
-
-
-class ObjectEventSettingsFactory(factory.Factory):
-    FACTORY_FOR = ObjectEventSettings

@@ -74,7 +74,7 @@ Settings
 OBJECT_EVENTS_USER_AGGREGATION
 ++++++++++++++++++++++++++++++
 
-Default: 'test_app.TestAggregation'
+Default: 'object_events.UserAggregation'
 
 This is a class, which lets you create custom function to aggregate all users,
 which should be notified. Therefore you can e.g. build a user profile, which
@@ -90,31 +90,16 @@ The following functions can be defined::
 Always return a list of primary keys of Django's User model.
 
 
-OBJECT_EVENTS_DAILY
-+++++++++++++++++++
+AUTH_PROFILE_MODULE
+++++++++++++++++++++++++++++++
 
-Default: 1
+Default: 'test_app.TestProfile'
 
-The management command ``./manage.py send_event_emails daily`` will process
-object_events which are not older than ``1`` day.
-
-
-OBJECT_EVENTS_WEEKLY
-++++++++++++++++++++
-
-Default: 7
-
-The management command ``./manage.py send_event_emails weekly`` will process
-object_events which are not older than ``7`` days.
-
-
-OBJECT_EVENTS_MONTHLY_DATE
-++++++++++++++++++++++++++
-
-Default: 1
-
-The management command ``./manage.py send_event_emails monthly`` will process
-object_events which are not older than the ``1st`` of the current month.
+You might know this setting already. This Django setting connects a custom
+model to Django's User model. As you can see in the setting
+OBJECT_EVENTS_USER_AGGREGATION above you will have to provide User querysets,
+based on interval preferences. So create a custom model, which looks like the
+one in our test app to use our basic aggregation class.
 
 
 Roadmap

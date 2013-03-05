@@ -1,4 +1,6 @@
 """Models for the ``object_events`` app."""
+from django.conf import settings
+from django.contrib.auth.models import SiteProfileNotAvailable
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -25,6 +27,48 @@ NOTIFICATION_INTERVALS = (
     ('weekly', _('weekly')),
     ('monthly', _('monthly')),
 )
+
+
+class UserAggregation(object):
+    """Class to aggregate 'realtime', 'daily', 'weekly', 'monthly' users."""
+    def __init__(self):
+        """Checks if there's a user profile."""
+        if not getattr(settings, 'AUTH_PROFILE_MODULE', False):
+            raise SiteProfileNotAvailable(
+                'You need to set AUTH_PROFILE_MODULE in your project settings')
+        try:
+            app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
+        except ValueError:
+            raise SiteProfileNotAvailable(
+                'app_label and model_name should be separated by a dot in'
+                ' the AUTH_PROFILE_MODULE setting')
+        self.model = models.get_model(app_label, model_name)
+        if self.model is None:
+            raise SiteProfileNotAvailable(
+                'Unable to load the profile model, check'
+                ' AUTH_PROFILE_MODULE in your project settings')
+        if not hasattr(self.model(), 'interval'):
+            raise SiteProfileNotAvailable('Model has no field "interval"')
+
+    def get_realtime_users(self):
+        """Function to aggregate users, which will be notified in realtime."""
+        return self.model.objects.filter(interval='realtime').values_list(
+            'pk', flat=True)
+
+    def get_daily_users(self):
+        """Function to aggregate users, which will be notified daily."""
+        return self.model.objects.filter(interval='daily').values_list(
+            'pk', flat=True)
+
+    def get_weekly_users(self):
+        """Function to aggregate users, which will be notified weekly."""
+        return self.model.objects.filter(interval='weekly').values_list(
+            'pk', flat=True)
+
+    def get_monthly_users(self):
+        """Function to aggregate users, which will be notified monthly."""
+        return self.model.objects.filter(interval='monthly').values_list(
+            'pk', flat=True)
 
 
 class ObjectEventType(models.Model):
@@ -139,44 +183,3 @@ class ObjectEvent(models.Model):
         if self.creation_date.year != now().year:
             return date(self.creation_date, 'd F Y')
         return date(self.creation_date, 'd F')
-
-
-class ObjectEventSettingsManager(models.Manager):
-    """Manager to return the one and only setting instance."""
-    def get_settings(self, **kwargs):
-        try:
-            settings = self.get_query_set().get(pk=1)
-        except ObjectEventSettings.DoesNotExist:
-            return self.get_query_set().create(**kwargs)
-        return settings
-
-    def run_finished(self):
-        settings = self.get_settings()
-        settings.last_run = now()
-        settings.save()
-        return settings
-
-
-class ObjectEventSettings(models.Model):
-    """
-    Table containing app-related settings and information.
-
-    :last_run: Datetime of the last run of the management command
-      ``send_event_emails``.
-
-    """
-    last_run = models.DateTimeField(
-        verbose_name=_('Last run'),
-        blank=True, null=True,
-    )
-
-    objects = ObjectEventSettingsManager()
-
-    def save(self, **kwargs):
-        if self.pk and self.pk == 1:
-            return super(ObjectEventSettings, self).save(**kwargs)
-        try:
-            ObjectEventSettings.objects.get(pk=1)
-        except ObjectEventSettings.DoesNotExist:
-            return super(ObjectEventSettings, self).save(**kwargs)
-        return False

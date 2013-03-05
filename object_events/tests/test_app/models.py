@@ -21,27 +21,9 @@ class TestProfile(models.Model):
     interval = models.CharField(max_length=20, choices=NOTIFICATION_INTERVALS)
 
 
-class TestAggregation(object):
-    """Class to aggregate 'realtime', 'daily', 'weekly', 'monthly' users."""
-    def get_realtime_users(self):
-        """Function to aggregate users, which will be notified in realtime."""
-        return TestProfile.objects.filter(interval='realtime').values_list(
-            'pk', flat=True)
-
-    def get_daily_users(self):
-        """Function to aggregate users, which will be notified daily."""
-        return TestProfile.objects.filter(interval='daily').values_list(
-            'pk', flat=True)
-
-    def get_weekly_users(self):
-        """Function to aggregate users, which will be notified weekly."""
-        return TestProfile.objects.filter(interval='weekly').values_list(
-            'pk', flat=True)
-
-    def get_monthly_users(self):
-        """Function to aggregate users, which will be notified monthly."""
-        return TestProfile.objects.filter(interval='monthly').values_list(
-            'pk', flat=True)
+class WrongTestProfile(models.Model):
+    """Wrong enhanced ``User`` model to test profile import."""
+    pass
 
 
 class EmptyAggregation(object):

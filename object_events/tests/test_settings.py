@@ -85,7 +85,7 @@ EMAIL_USE_TLS = True
 
 
 # django-event-object-specific settings
-OBJECT_EVENTS_USER_AGGREGATION = 'test_app.TestAggregation'
-OBJECT_EVENTS_DAILY = 1
-OBJECT_EVENTS_WEEKLY = 7
-OBJECT_EVENTS_MONTHLY_DATE = 1
+OBJECT_EVENTS_USER_AGGREGATION = 'object_events.UserAggregation'
+
+# django setting to connect a model als a User profile
+AUTH_PROFILE_MODULE = 'test_app.TestProfile'

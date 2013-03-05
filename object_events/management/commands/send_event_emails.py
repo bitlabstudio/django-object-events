@@ -15,11 +15,10 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from django.db.models import get_app
-from django.utils import timezone
 
 from django_libs.utils_email import send_email
 
-from ...models import ObjectEvent, ObjectEventSettings
+from ...models import ObjectEvent
 
 
 class Command(BaseCommand):
@@ -68,35 +67,24 @@ class Command(BaseCommand):
             except AttributeError:
                 print('Function get_realtime_users() not defined.')
                 return
-            object_event_settings = ObjectEventSettings.objects.get_settings()
-            # If there's no last run registered, cover the last week.
-            min_date = (object_event_settings.last_run
-                        or timezone.now() - timezone.timedelta(days=7))
         elif 'daily' in args:
             try:
                 users = aggregation().get_daily_users()
             except AttributeError:
                 print('Function get_daily_users() not defined.')
                 return
-            min_date = timezone.now() - timezone.timedelta(
-                days=settings.OBJECT_EVENTS_DAILY)
         elif 'weekly' in args:
             try:
                 users = aggregation().get_weekly_users()
             except AttributeError:
                 print('Function get_weekly_users() not defined.')
                 return
-            min_date = timezone.now() - timezone.timedelta(
-                days=settings.OBJECT_EVENTS_WEEKLY)
         elif 'monthly' in args:
             try:
                 users = aggregation().get_monthly_users()
             except AttributeError:
                 print('Function get_monthly_users() not defined.')
                 return
-            now = timezone.now()
-            min_date = timezone.datetime(
-                now.year, now.month, settings.OBJECT_EVENTS_MONTHLY_DATE)
         else:
             print('Please provide a valid interval argument (realtime, daily,'
                   ' weekly, monthly)')
@@ -104,10 +92,9 @@ class Command(BaseCommand):
         if not users:
             print('No users to send a mail.')
             return
-        # Get all events from ``min_date`` till now.
+        # Get all events , which hasn't been sent yet.
         object_events = ObjectEvent.objects.filter(
-            email_sent=False, creation_date__gt=min_date,
-            user__pk__in=users).order_by('user__pk')
+            email_sent=False, user__pk__in=users).order_by('user__pk')
         if not object_events:
             print('No events to send.')
             return
@@ -129,6 +116,4 @@ class Command(BaseCommand):
         # Send email even for the last user in the queryset, who cannot have
         # a follower
         self.send_mail_to_user(email_context, current_user.email)
-
-        ObjectEventSettings.objects.run_finished()
         print('Send emails for {0} events.'.format(object_events.count()))
