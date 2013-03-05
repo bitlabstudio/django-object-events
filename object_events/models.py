@@ -53,22 +53,22 @@ class UserAggregation(object):
     def get_realtime_users(self):
         """Function to aggregate users, which will be notified in realtime."""
         return self.model.objects.filter(interval='realtime').values_list(
-            'pk', flat=True)
+            'user__pk', flat=True)
 
     def get_daily_users(self):
         """Function to aggregate users, which will be notified daily."""
         return self.model.objects.filter(interval='daily').values_list(
-            'pk', flat=True)
+            'user__pk', flat=True)
 
     def get_weekly_users(self):
         """Function to aggregate users, which will be notified weekly."""
         return self.model.objects.filter(interval='weekly').values_list(
-            'pk', flat=True)
+            'user__pk', flat=True)
 
     def get_monthly_users(self):
         """Function to aggregate users, which will be notified monthly."""
         return self.model.objects.filter(interval='monthly').values_list(
-            'pk', flat=True)
+            'user__pk', flat=True)
 
 
 class ObjectEventType(models.Model):
