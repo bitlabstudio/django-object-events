@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'ObjectEvent.event_type'
         db.add_column('object_events_objectevent', 'event_type',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default='', related_name='events', to=orm['object_events.ObjectEventType']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=None, related_name='events', to=orm['object_events.ObjectEventType']),
                       keep_default=False)
 
 
