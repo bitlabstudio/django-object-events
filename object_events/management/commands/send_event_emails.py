@@ -15,6 +15,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import get_app
+from django.utils import timezone
 
 from django_libs.utils_email import send_email
 
@@ -34,10 +35,15 @@ class Command(BaseCommand):
             from_email=settings.FROM_EMAIL,
             recipients=[to],
         )
+        self.sent_emails += 1
 
-    def handle(self, *args, **options):
+    def handle(self, interval='', **options):
         """Handles the send_event_emails admin command."""
         # Check if there is an aggregation class defined.
+        start_of_command = timezone.now()
+        if not interval in ('realtime', 'daily', 'weekly', 'monthly'):
+            raise CommandError('Please provide a valid interval argument'
+                               ' (realtime, daily, weekly, monthly)')
         if not getattr(settings, 'OBJECT_EVENTS_USER_AGGREGATION', False):
             raise CommandError(
                 'You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
@@ -59,32 +65,13 @@ class Command(BaseCommand):
             raise CommandError('Unable to load defined class in the'
                                ' OBJECT_EVENTS_USER_AGGREGATION setting.')
         # Check interval argument and functions in the aggregation class.
-        if 'realtime' in args:
-            try:
-                users = aggregation().get_realtime_users()
-            except AttributeError:
-                raise CommandError('Function get_realtime_users() not'
-                                   ' defined.')
-        elif 'daily' in args:
-            try:
-                users = aggregation().get_daily_users()
-            except AttributeError:
-                raise CommandError('Function get_daily_users() not defined.')
-        elif 'weekly' in args:
-            try:
-                users = aggregation().get_weekly_users()
-            except AttributeError:
-                raise CommandError('Function get_weekly_users() not defined.')
-        elif 'monthly' in args:
-            try:
-                users = aggregation().get_monthly_users()
-            except AttributeError:
-                raise CommandError('Function get_monthly_users() not defined.')
-        else:
-            raise CommandError('Please provide a valid interval argument'
-                               ' (realtime, daily, weekly, monthly)')
+        try:
+            users = getattr(aggregation(), 'get_{0}_users'.format(interval))()
+        except AttributeError:
+            raise CommandError('Function get_{0}_users() not defined.'.format(
+                interval))
         if not users:
-            print('No users to send an email.')
+            print('No users to send a {0} email.'.format(interval))
             return
         # Get all events , which hasn't been sent yet.
         object_events = ObjectEvent.objects.filter(
@@ -94,6 +81,7 @@ class Command(BaseCommand):
             return
         email_context = {}
         current_user = None
+        self.sent_emails = 0
         for object_event in object_events:
             if current_user != object_event.user and email_context:
                 self.send_mail_to_user(email_context, current_user.email)
@@ -109,5 +97,8 @@ class Command(BaseCommand):
             object_event.save()
         # Send email even for the last user in the queryset, who cannot have
         # a follower
-        self.send_mail_to_user(email_context, current_user.email)
-        print('Send emails for {0} events.'.format(object_events.count()))
+        if email_context:
+            self.send_mail_to_user(email_context, current_user.email)
+        print('The command took {0} seconds to finish. Send {1} emails for {2}'
+              ' events.'.format((timezone.now() - start_of_command).seconds,
+                                self.sent_emails, object_events.count()))

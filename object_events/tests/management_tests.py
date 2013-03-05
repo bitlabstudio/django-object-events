@@ -23,22 +23,22 @@ class SendEventEmailsTestCase(TestCase):
     @raises(SystemExit)
     def test_missing_aggregation_class(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = False
-        self.assertFalse(call_command('send_event_emails'))
+        self.assertFalse(call_command('send_event_emails', 'realtime'))
 
     @raises(SystemExit)
     def test_wrong_aggregation_definition(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test'
-        self.assertFalse(call_command('send_event_emails'))
+        self.assertFalse(call_command('send_event_emails', 'realtime'))
 
     @raises(SystemExit)
     def test_wrong_aggregation_app(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test.Test'
-        self.assertFalse(call_command('send_event_emails'))
+        self.assertFalse(call_command('send_event_emails', 'realtime'))
 
     @raises(SystemExit)
     def test_wrong_aggregation_class(self):
         settings.OBJECT_EVENTS_USER_AGGREGATION = 'test_app.Test'
-        self.assertFalse(call_command('send_event_emails'))
+        self.assertFalse(call_command('send_event_emails', 'realtime'))
 
     @raises(SystemExit)
     def test_missing_aggregation_function_realtime(self):
