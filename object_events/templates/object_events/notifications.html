@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load url from future %}
+{% if authenticated %}
+    <p>{% blocktrans %}You got {{ unread_amount }} unread notifications.{% endblocktrans %}</p>
+    <form action="{% url "object_events_mark" %}" method="post">
+        {% csrf_token %}
+        <ul>
+            {% for notification in notifications %}
+                <li>
+                    {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
+                    <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </form>
+{% endif %}

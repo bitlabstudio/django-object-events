@@ -107,6 +107,9 @@ class ObjectEventType(models.Model):
         help_text=_('Please use a slugified name, e.g. "student-news".'),
     )
 
+    class Meta:
+        ordering = ['title']
+
     def __unicode__(self):
         return self.title
 
@@ -175,6 +178,9 @@ class ObjectEvent(models.Model):
     event_content_object = generic.GenericForeignKey(
         'event_content_type', 'event_object_id')
 
+    class Meta:
+        ordering = ['-creation_date']
+
     @staticmethod
     def create_event(user, content_object, event_content_object=None,
                      event_type=''):
@@ -198,6 +204,9 @@ class ObjectEvent(models.Model):
             obj.event_content_object = event_content_object
         obj.save()
         return obj
+
+    def __unicode__(self):
+        return '{0}'.format(self.content_object)
 
     def get_timesince(self):
         delta = (now() - self.creation_date)

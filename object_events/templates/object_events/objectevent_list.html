@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main %}
+    <h1>{% trans "Notifications" %}</h1>
+    <ul>
+        {% for notification in object_list %}
+            <li>
+                {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
