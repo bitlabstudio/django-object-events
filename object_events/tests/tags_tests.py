@@ -32,8 +32,8 @@ class RenderNotificationsTestCase(TestCase):
 
         # Returns notifications.html
         event = ObjectEventFactory(user=request.user)
-        self.assertEqual(render_notifications(context), {
-            'unread_amount': 1,
-            'authenticated': True,
-            'notifications': [event],
-        })
+        self.assertEqual(render_notifications(context).get('notifications'),
+                         [event])
+        self.assertEqual(render_notifications(context).get('unread_amount'), 1)
+        self.assertEqual(render_notifications(context).get('authenticated'),
+                         True)

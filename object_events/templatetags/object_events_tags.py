@@ -1,6 +1,5 @@
 """Template tags for the ``object_events`` app."""
 from django import template
-from django.conf import settings
 
 from ..models import ObjectEvent
 
