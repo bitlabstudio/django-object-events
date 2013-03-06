@@ -90,17 +90,18 @@ Make sure to add all email-related settings::
 Of course, change it to your email address and your email server settings.
 
 Since the app is using intervals in sending email notifications we need to find
-all users, which should be delivered with fresh mails. For that purpose take a
-look at the setting ``OBJECT_EVENTS_USER_AGGREGATION`` right below.
+all users, which should retrieve fresh mail notifications. For that purpose
+take a look at the setting ``OBJECT_EVENTS_USER_AGGREGATION`` right below.
 
-Now, back to me. If you want to use this aggregation class you will have to
-create a custom profile model with a key to Django's User model and an interval
-field, which provides these four options (realtime, daily, weekly, monthly).
+Now, back to me. If you already created or are about to create a custom profile
+model with a key to Django's User model and an interval field, which provides
+these four options (realtime, daily, weekly, monthly), you can easily use our
+predefined class ``object_events.UserAggregation``.
 
 Use this profile as the general user profile (see setting AUTH_PROFILE_MODULE).
 
-You can also change or extend the aggregation class. Just make sure you follow
-the instructions below.
+If you want to create your own aggregation class, make sure to inherit from
+``object_events.UserAggregationBase``.
 
 Now, call the management command manually or e.g. with cronjobs. Manually::
 
@@ -110,7 +111,7 @@ With cronjobs for example:
 
     * * * * * $HOME/webapps/$DJANGO_APP_NAME/myproject/manage.py send_event_emails realtime > $HOME/mylogs/cron/send_event_emails.log 2>&1
 
-Huh, cronjobs? If you are a bit server savy connect to your server and type in
+Huh, cronjobs? If you are a bit server savvy connect to your server and type in
 ``EDITOR=nano crontab -e``.
 
 Whatever, maybe you want to try it manually first.
@@ -130,6 +131,9 @@ Default: 'object_events.UserAggregation'
 This is a class, which lets you create custom function to aggregate all users,
 which should be notified. Therefore you can e.g. build a user profile, which
 contains an interval or rrule setting.
+
+Feel free to create custom functions and overrides. Just make sure to use the
+base class ``object_events.UserAggregationBase``.
 
 The following functions can be defined::
 
