@@ -47,10 +47,11 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
         self.is_not_callable(
             user=self.user, method='post', data={'single_mark': 999})
 
-        # Successful post
+        # Successful post and redirect to custom url
         self.is_callable(
-            user=self.user, method='post', data={'single_mark': self.event.pk},
-            and_redirects_to=reverse('object_events_list'))
+            user=self.user, method='post',
+            data={'single_mark': self.event.pk, 'next': '/test/'},
+            and_redirects_to='/test/')
         self.assertTrue(ObjectEvent.objects.get(pk=self.event.pk).read_by_user)
 
         # bulk_mark variable has no pk items
