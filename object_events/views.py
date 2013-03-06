@@ -8,6 +8,15 @@ from django.views.generic import ListView, RedirectView
 from .models import ObjectEvent
 
 
+def is_integer(mark_string):
+    """Function to check if a supposed pk is an integer."""
+    try:
+        mark_id = int(mark_string)
+    except ValueError:
+        return False
+    return mark_id
+
+
 class ObjectEventsListView(ListView):
     """View to display a defined amount of notifications."""
     @method_decorator(login_required)
@@ -29,9 +38,8 @@ class ObjectEventsMarkView(RedirectView):
         if not request.method == 'POST':
             raise Http404
         if request.POST.get('single_mark'):
-            try:
-                mark_id = int(request.POST.get('single_mark'))
-            except ValueError:
+            mark_id = is_integer(request.POST.get('single_mark'))
+            if not mark_id:
                 raise Http404
             try:
                 event = ObjectEvent.objects.get(user=request.user, pk=mark_id)
@@ -39,6 +47,13 @@ class ObjectEventsMarkView(RedirectView):
                 raise Http404
             event.read_by_user = True
             event.save()
+        elif request.POST.get('bulk_mark'):
+            event_pks = request.POST.get('bulk_mark').split(',')
+            event_pks = [is_integer(n) for n in event_pks]
+            if event_pks:
+                ObjectEvent.objects.filter(
+                    pk__in=event_pks, user=request.user).update(
+                        read_by_user=True)
         return super(ObjectEventsMarkView, self).dispatch(request, *args,
                                                           **kwargs)
 

@@ -12,5 +12,6 @@
                 </li>
             {% endfor %}
         </ul>
+        <button type="submit" name="bulk_mark" value="{% for notification in notifications %}{{ notification.pk }},{% endfor %}">{% trans "Mark all as read" %}</button>
     </form>
 {% endif %}

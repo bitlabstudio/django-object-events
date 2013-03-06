@@ -52,3 +52,23 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
             user=self.user, method='post', data={'single_mark': self.event.pk},
             and_redirects_to=reverse('object_events_list'))
         self.assertTrue(ObjectEvent.objects.get(pk=self.event.pk).read_by_user)
+
+        # bulk_mark variable has no pk items
+        self.is_callable(
+            user=self.user, method='post', data={'bulk_mark': 'abc, x, []'},
+            and_redirects_to=reverse('object_events_list'))
+
+        # bulk_mark variable is an empty string
+        self.is_callable(
+            user=self.user, method='post', data={'bulk_mark': ''},
+            and_redirects_to=reverse('object_events_list'))
+
+        # bulk_mark variable is an empty list
+        e2 = ObjectEventFactory(user=self.user)
+        e3 = ObjectEventFactory(user=self.user)
+        self.is_callable(
+            user=self.user, method='post',
+            data={'bulk_mark': '{0}, {1}, '.format(e2.pk, e3.pk)},
+            and_redirects_to=reverse('object_events_list'))
+        self.assertTrue(ObjectEvent.objects.get(pk=e2.pk).read_by_user)
+        self.assertTrue(ObjectEvent.objects.get(pk=e3.pk).read_by_user)
