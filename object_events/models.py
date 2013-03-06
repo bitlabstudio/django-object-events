@@ -18,7 +18,9 @@ Interval the user will be notified.
   weekly   -> e.g. every sunday at 3 p.m.
   monthly  -> e.g. every last sunday of a month at 5 p.m.
 
-You can configure this dates by defining your cronjobs.
+For each interval that you allow in your app make sure that you define a
+cronjob that is scheduled at this interval and called with the interval name
+as it's parameter.
 
 """
 NOTIFICATION_INTERVALS = (

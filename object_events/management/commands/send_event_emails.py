@@ -8,7 +8,11 @@ Options:
   weekly   -> e.g. every sunday at 3 p.m.
   monthly  -> e.g. every last sunday of a month at 5 p.m.
 
-You can configure this dates by defining your cronjobs.
+The command always iterates over all events that have email_sent=False, but if
+your app allows users to change their notification interval in their
+UserProfile providing this parameter will call a different method on your
+UserAggregation class implementation and therefore will include only a subset
+of events (only for certain users).
 
 """
 from django.conf import settings
