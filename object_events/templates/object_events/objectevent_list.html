@@ -3,16 +3,26 @@
 {% load url from future %}
 
 {% block main %}
-    <h1>{% trans "Notifications" %}</h1>
-    <form action="{% url "object_events_mark" %}" method="post">
-        <ul>
-            {% for notification in object_list %}
-                <li>
-                    {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
-                    <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
-                </li>
-            {% endfor %}
-        </ul>
-        <button type="submit" name="bulk_mark" value="{% for notification in object_list %}{{ notification.pk }},{% endfor %}">{% trans "Mark all as read" %}</button>
-    </form>
+<h1>{% trans "Notifications" %}</h1>
+<form action="{% url "object_events_mark" %}" method="post">
+    <ul>
+        {% for notification in object_list %}
+            <li>
+                {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
+                <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
+            </li>
+        {% endfor %}
+    </ul>
+    <button type="submit" name="bulk_mark" value="{% for notification in object_list %}{{ notification.pk }},{% endfor %}">{% trans "Mark all as read" %}</button>
+</form>
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a href="?page={{ object_list.previous_page_number }}">{% trans "previous" %}</a>
+    {% endif %}
+    {% blocktrans with number=page_obj.number num_pages=page_obj.paginator.num_pages %}Page {{ number }} of {{ num_pages }}{% endblocktrans %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{% trans "next" %}</a>
+    {% endif %}
+{% endif %}
 {% endblock %}

@@ -1,4 +1,5 @@
 """Views for the ``object_events`` app."""
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import Http404
@@ -19,6 +20,8 @@ def is_integer(mark_string):
 
 class ObjectEventsListView(ListView):
     """View to display a defined amount of notifications."""
+    paginate_by = settings.OBJECT_EVENTS_PAGINATION_ITEMS
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.user = request.user

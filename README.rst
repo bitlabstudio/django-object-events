@@ -165,6 +165,14 @@ Default: 8
 Amount of notifications to display in the ``render_notifications`` tag.
 
 
+OBJECT_EVENTS_PAGINATION_ITEMS
+++++++++++++++++++++++++++++++
+
+Default: 30
+
+Amount of notifications to display in the notification list view.
+
+
 Roadmap
 -------
 
