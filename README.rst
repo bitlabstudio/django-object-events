@@ -157,14 +157,6 @@ based on interval preferences. So create a custom model, which looks like the
 one in our test app to use our basic aggregation class.
 
 
-OBJECT_EVENTS_TAG_ITEMS
-+++++++++++++++++++++++
-
-Default: 8
-
-Amount of notifications to display in the ``render_notifications`` tag.
-
-
 OBJECT_EVENTS_PAGINATION_ITEMS
 ++++++++++++++++++++++++++++++
 
