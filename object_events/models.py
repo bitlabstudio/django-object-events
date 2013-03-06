@@ -29,7 +29,26 @@ NOTIFICATION_INTERVALS = (
 )
 
 
-class UserAggregation(object):
+class UserAggregationBase(object):
+    """Bass aggregation class to inherit from."""
+    def get_realtime_users(self):
+        """Function to aggregate users, which will be notified in realtime."""
+        raise NotImplementedError()
+
+    def get_daily_users(self):
+        """Function to aggregate users, which will be notified daily."""
+        raise NotImplementedError()
+
+    def get_weekly_users(self):
+        """Function to aggregate users, which will be notified weekly."""
+        raise NotImplementedError()
+
+    def get_monthly_users(self):
+        """Function to aggregate users, which will be notified monthly."""
+        raise NotImplementedError()
+
+
+class UserAggregation(UserAggregationBase):
     """Class to aggregate 'realtime', 'daily', 'weekly', 'monthly' users."""
     def __init__(self):
         """Checks if there's a user profile."""

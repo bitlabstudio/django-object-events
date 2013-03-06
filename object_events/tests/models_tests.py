@@ -4,8 +4,9 @@ from django.test import TestCase
 from django.utils.timezone import now, timedelta
 
 from django_libs.tests.factories import UserFactory
+from nose.tools import raises
 
-from ..models import ObjectEvent, ObjectEventType
+from ..models import ObjectEvent, ObjectEventType, UserAggregationBase
 from .factories import ObjectEventFactory, ObjectEventTypeFactory
 
 
@@ -56,3 +57,22 @@ class ObjectEventTestCase(TestCase):
         object_event.creation_date = now() - timedelta(days=365)
         self.assertEqual(object_event.get_timesince(), date(
             object_event.creation_date, 'd F Y'))
+
+
+class UserAggregationBaseTestCase(TestCase):
+    """Tests for the ``UserAggregationBase`` aggregation class."""
+    @raises(NotImplementedError)
+    def test_get_realtime_users(self):
+        UserAggregationBase().get_realtime_users()
+
+    @raises(NotImplementedError)
+    def test_get_daily_users(self):
+        UserAggregationBase().get_daily_users()
+
+    @raises(NotImplementedError)
+    def test_get_weekly_users(self):
+        UserAggregationBase().get_weekly_users()
+
+    @raises(NotImplementedError)
+    def test_get_monthly_users(self):
+        UserAggregationBase().get_monthly_users()
