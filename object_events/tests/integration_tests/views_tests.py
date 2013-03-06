@@ -54,6 +54,11 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
             and_redirects_to='/test/')
         self.assertTrue(ObjectEvent.objects.get(pk=self.event.pk).read_by_user)
 
+        # Succesful AJAX post
+        resp = self.client.post(self.get_url(), {'single_mark': self.event.pk},
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(resp.content, 'marked')
+
         # bulk_mark variable has no pk items
         self.is_callable(
             user=self.user, method='post', data={'bulk_mark': 'abc, x, []'},

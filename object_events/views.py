@@ -1,7 +1,7 @@
 """Views for the ``object_events`` app."""
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, RedirectView
 
@@ -50,6 +50,8 @@ class ObjectEventsMarkView(RedirectView):
                 raise Http404
             event.read_by_user = True
             event.save()
+            if request.is_ajax():
+                return HttpResponse('marked')
         elif request.POST.get('bulk_mark'):
             event_pks = request.POST.get('bulk_mark').split(',')
             event_pks = [n for n in event_pks if is_integer(n)]
