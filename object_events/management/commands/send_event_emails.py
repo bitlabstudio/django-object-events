@@ -24,6 +24,7 @@ from django.utils import timezone
 from django_libs.utils_email import send_email
 
 from ...models import ObjectEvent
+from ...object_events_settings import USER_AGGREGATION_CLASS
 
 
 class Command(BaseCommand):
@@ -48,12 +49,12 @@ class Command(BaseCommand):
         if not interval in ('realtime', 'daily', 'weekly', 'monthly'):
             raise CommandError('Please provide a valid interval argument'
                                ' (realtime, daily, weekly, monthly)')
-        if not getattr(settings, 'OBJECT_EVENTS_USER_AGGREGATION', False):
+        if not USER_AGGREGATION_CLASS:
             raise CommandError(
                 'You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
                 ' your project settings.')
         try:
-            app, app_class = settings.OBJECT_EVENTS_USER_AGGREGATION.split('.')
+            app, app_class = USER_AGGREGATION_CLASS.split('.')
         except ValueError:
             raise CommandError(
                 'app_label and app_class should be separated by a dot in'

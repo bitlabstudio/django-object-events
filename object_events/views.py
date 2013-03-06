@@ -1,5 +1,4 @@
 """Views for the ``object_events`` app."""
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import Http404
@@ -7,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, RedirectView
 
 from .models import ObjectEvent
+from .object_events_settings import PAGINATION_ITEMS
 
 
 def is_integer(mark_string):
@@ -20,7 +20,7 @@ def is_integer(mark_string):
 
 class ObjectEventsListView(ListView):
     """View to display a defined amount of notifications."""
-    paginate_by = settings.OBJECT_EVENTS_PAGINATION_ITEMS
+    paginate_by = PAGINATION_ITEMS
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

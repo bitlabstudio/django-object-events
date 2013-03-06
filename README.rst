@@ -91,7 +91,8 @@ Of course, change it to your email address and your email server settings.
 
 Since the app is using intervals in sending email notifications we need to find
 all users, which should retrieve fresh mail notifications. For that purpose
-take a look at the setting ``OBJECT_EVENTS_USER_AGGREGATION`` right below.
+take a look at the setting ``OBJECT_EVENTS_USER_AGGREGATION_CLASS`` right
+below.
 
 Now, back to me. If you already created or are about to create a custom profile
 model with a key to Django's User model and an interval field, which provides
@@ -123,8 +124,8 @@ with it!
 Settings
 --------
 
-OBJECT_EVENTS_USER_AGGREGATION
-++++++++++++++++++++++++++++++
+OBJECT_EVENTS_USER_AGGREGATION_CLASS
+++++++++++++++++++++++++++++++++++++
 
 Default: 'object_events.UserAggregation'
 
@@ -152,9 +153,9 @@ Default: 'test_app.TestProfile'
 
 You might know this setting already. This Django setting connects a custom
 model to Django's User model. As you can see in the setting
-OBJECT_EVENTS_USER_AGGREGATION above you will have to provide User querysets,
-based on interval preferences. So create a custom model, which looks like the
-one in our test app to use our basic aggregation class.
+OBJECT_EVENTS_USER_AGGREGATION_CLASS above you will have to provide User
+querysets, based on interval preferences. So create a custom model, which looks
+like the one in our test app to use our basic aggregation class.
 
 
 OBJECT_EVENTS_PAGINATION_ITEMS

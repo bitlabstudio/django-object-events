@@ -92,10 +92,5 @@ DEFAULT_FROM_EMAIL = FROM_EMAIL
 SERVER_EMAIL = FROM_EMAIL
 EMAIL_USE_TLS = True
 
-
-# django-event-object-specific settings
-OBJECT_EVENTS_USER_AGGREGATION = 'object_events.UserAggregation'
-OBJECT_EVENTS_PAGINATION_ITEMS = 30
-
 # django setting to connect a model als a User profile
 AUTH_PROFILE_MODULE = 'test_app.TestProfile'
