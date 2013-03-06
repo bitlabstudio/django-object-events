@@ -54,7 +54,7 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
             and_redirects_to='/test/')
         self.assertTrue(ObjectEvent.objects.get(pk=self.event.pk).read_by_user)
 
-        # Succesful AJAX post
+        # Succesful single-mark AJAX post
         resp = self.client.post(self.get_url(), {'single_mark': self.event.pk},
                                 HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(resp.content, 'marked')
@@ -69,7 +69,7 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
             user=self.user, method='post', data={'bulk_mark': ''},
             and_redirects_to=reverse('object_events_list'))
 
-        # bulk_mark variable is an empty list
+        # Successful bulk_mark post
         e2 = ObjectEventFactory(user=self.user)
         e3 = ObjectEventFactory(user=self.user)
         self.is_callable(
@@ -78,3 +78,8 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
             and_redirects_to=reverse('object_events_list'))
         self.assertTrue(ObjectEvent.objects.get(pk=e2.pk).read_by_user)
         self.assertTrue(ObjectEvent.objects.get(pk=e3.pk).read_by_user)
+
+        # Succesful bulk-mark AJAX post
+        resp = self.client.post(self.get_url(), {'bulk_mark': e2.pk},
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(resp.content, 'marked')

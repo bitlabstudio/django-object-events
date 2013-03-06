@@ -59,6 +59,8 @@ class ObjectEventsMarkView(RedirectView):
                 ObjectEvent.objects.filter(
                     pk__in=event_pks, user=request.user).update(
                         read_by_user=True)
+                if request.is_ajax():
+                    return HttpResponse('marked')
         return super(ObjectEventsMarkView, self).dispatch(request, *args,
                                                           **kwargs)
 
