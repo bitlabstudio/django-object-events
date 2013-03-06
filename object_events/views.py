@@ -61,4 +61,6 @@ class ObjectEventsMarkView(RedirectView):
                                                           **kwargs)
 
     def get_redirect_url(self, **kwargs):
+        if self.request.POST.get('next'):
+            return self.request.POST.get('next')
         return reverse('object_events_list')

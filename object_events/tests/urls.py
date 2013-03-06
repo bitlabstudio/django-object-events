@@ -16,5 +16,5 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^notifications/', include('object_events.urls')),
-    url(r'^$', TemplateView.as_view(template_name='test_app/tag.html')),
+    url(r'^test/$', TemplateView.as_view(template_name='test_app/tag.html')),
 )
