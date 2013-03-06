@@ -70,10 +70,9 @@ class Command(BaseCommand):
                                ' OBJECT_EVENTS_USER_AGGREGATION setting.')
         # Check interval argument and functions in the aggregation class.
         try:
-            users = getattr(aggregation(), 'get_{0}_users'.format(interval))()
+            users = getattr(aggregation(), 'get_users')(interval)
         except AttributeError:
-            raise CommandError('Function get_{0}_users() not defined.'.format(
-                interval))
+            raise CommandError('Function get_users() not defined.')
         if not users:
             print('No users to send a {0} email.'.format(interval))
             return

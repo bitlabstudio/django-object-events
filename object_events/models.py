@@ -33,6 +33,10 @@ NOTIFICATION_INTERVALS = (
 
 class UserAggregationBase(object):
     """Bass aggregation class to inherit from."""
+    def get_users(self, interval):
+        """Function to delegate user aggregation."""
+        return getattr(self, 'get_{0}_users'.format(interval))()
+
     def get_realtime_users(self):
         """Function to aggregate users, which will be notified in realtime."""
         raise NotImplementedError()

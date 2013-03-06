@@ -63,16 +63,16 @@ class UserAggregationBaseTestCase(TestCase):
     """Tests for the ``UserAggregationBase`` aggregation class."""
     @raises(NotImplementedError)
     def test_get_realtime_users(self):
-        UserAggregationBase().get_realtime_users()
+        UserAggregationBase().get_users('realtime')
 
     @raises(NotImplementedError)
     def test_get_daily_users(self):
-        UserAggregationBase().get_daily_users()
+        UserAggregationBase().get_users('daily')
 
     @raises(NotImplementedError)
     def test_get_weekly_users(self):
-        UserAggregationBase().get_weekly_users()
+        UserAggregationBase().get_users('weekly')
 
     @raises(NotImplementedError)
     def test_get_monthly_users(self):
-        UserAggregationBase().get_monthly_users()
+        UserAggregationBase().get_users('monthly')
