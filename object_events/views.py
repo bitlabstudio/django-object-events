@@ -52,7 +52,7 @@ class ObjectEventsMarkView(RedirectView):
             event.save()
         elif request.POST.get('bulk_mark'):
             event_pks = request.POST.get('bulk_mark').split(',')
-            event_pks = [is_integer(n) for n in event_pks]
+            event_pks = [n for n in event_pks if is_integer(n)]
             if event_pks:
                 ObjectEvent.objects.filter(
                     pk__in=event_pks, user=request.user).update(
