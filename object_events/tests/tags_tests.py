@@ -28,7 +28,8 @@ class RenderNotificationsTestCase(TestCase):
 
         # Returns empty dict if there are no notifications
         request.user = UserFactory()
-        self.assertEqual(render_notifications(context), {})
+        self.assertEqual(render_notifications(context),
+                         {'authenticated': True})
 
         # Returns notifications.html
         event = ObjectEventFactory(user=request.user)

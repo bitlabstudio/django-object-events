@@ -18,4 +18,5 @@ def render_notifications(context, notification_amount=8):
                 'unread_amount': events.filter(read_by_user=False).count(),
                 'notifications': events[:notification_amount],
             }
+        return {'authenticated': True}
     return {}
