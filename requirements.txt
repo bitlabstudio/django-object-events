@@ -4,7 +4,7 @@
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
 Django==1.4.5
-django-libs==0.16
+django-libs==1.1
 -e git+git://github.com/pinax/django-mailer.git@919805e25fc18b06487b25414d4e5d5e05a92108#egg=mailer
 South
 
@@ -19,3 +19,5 @@ coverage
 django-coverage
 django-jasmine
 selenium
+ipdb
+ipython

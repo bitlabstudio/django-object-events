@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, RedirectView
 
 from .models import ObjectEvent
-from .object_events_settings import PAGINATION_ITEMS
+from .app_settings import PAGINATION_ITEMS
 
 
 def is_integer(mark_string):

@@ -21,10 +21,11 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import get_app
 from django.utils import timezone
 
+from django_libs.loaders import load_member_from_setting
 from django_libs.utils_email import send_email
 
 from ...models import ObjectEvent
-from ...object_events_settings import USER_AGGREGATION_CLASS
+from ... import app_settings
 
 
 class Command(BaseCommand):
@@ -49,26 +50,8 @@ class Command(BaseCommand):
         if not interval in ('realtime', 'daily', 'weekly', 'monthly'):
             raise CommandError('Please provide a valid interval argument'
                                ' (realtime, daily, weekly, monthly)')
-        if not USER_AGGREGATION_CLASS:
-            raise CommandError(
-                'You need to set the OBJECT_EVENTS_USER_AGGREGATION class in'
-                ' your project settings.')
-        try:
-            app, app_class = USER_AGGREGATION_CLASS.split('.')
-        except ValueError:
-            raise CommandError(
-                'app_label and app_class should be separated by a dot in'
-                ' the OBJECT_EVENTS_USER_AGGREGATION setting.')
-        try:
-            aggregation_app = get_app(app)
-        except (ImportError, ImproperlyConfigured):
-            raise CommandError('Unable to load defined app in the'
-                               ' OBJECT_EVENTS_USER_AGGREGATION setting.')
-        try:
-            aggregation = aggregation_app.__getattribute__(app_class)
-        except AttributeError:
-            raise CommandError('Unable to load defined class in the'
-                               ' OBJECT_EVENTS_USER_AGGREGATION setting.')
+        aggregation = load_member_from_setting(
+            'USER_AGGREGATION_CLASS', app_settings)
         # Check interval argument and functions in the aggregation class.
         try:
             users = getattr(aggregation(), 'get_users')(interval)
