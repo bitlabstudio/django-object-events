@@ -4,13 +4,10 @@
 
 {% block main %}
 <h1>{% trans "Notifications" %}</h1>
-<form action="{% url "object_events_mark" %}" method="post">
+<form action="{% url "object_events_mark" %}" method="post" class="notifications">
     <ul>
         {% for notification in object_list %}
-            <li>
-                {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
-                <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
-            </li>
+            {% include "object_events/partials/notification.html" %}
         {% endfor %}
     </ul>
     <button type="submit" name="bulk_mark" value="{% for notification in object_list %}{{ notification.pk }},{% endfor %}">{% trans "Mark all as read" %}</button>

@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 {% load object_events_tags %}
 
-{% render_notifications 3 %}
+{% block main %}{% render_notifications 3 %}{% endblock %}

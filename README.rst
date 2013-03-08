@@ -121,6 +121,17 @@ connect your models to it via post_save signals. Whatever you will do, have fun
 with it!
 
 
+### Use with AJAX functions
+
+The basic functions like single_mark and bulk_mark can be easily used with
+AJAX. Just add the following files to your base.html.
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}object_events/css/object_events.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}object_events/js/object_events.js"></script>
+
+The css and the js file are already imported in the objectevent_list.html
+template.
+
 Settings
 --------
 

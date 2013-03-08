@@ -1,0 +1,5 @@
+{% load i18n %}
+<li {% if not notification.read_by_user %}class="unread"{% endif %}>
+    {{ notification }}
+    <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
+</li>

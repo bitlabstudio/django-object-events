@@ -1,15 +1,15 @@
 {% load i18n %}
 {% load url from future %}
 {% if authenticated %}
-    <p>{% blocktrans %}You got {{ unread_amount }} unread notifications.{% endblocktrans %}</p>
-    <form action="{% url "object_events_mark" %}" method="post">
+    <a id="notificationBtn" class="btn" href="{% url "object_events_list" %}">
+        <span class="badge{% if unread_amount > 0 %} badge-important{% endif %}">{{ unread_amount }}</span>
+        {% trans "Notifications" %}
+    </a>
+    <form action="{% url "object_events_mark" %}" method="post" class="notifications" id="notificationBar">
         {% csrf_token %}
         <ul>
             {% for notification in notifications %}
-                <li>
-                    {% if not notification.read_by_user %}<b>{% endif %}{{ notification }}{% if not notification.read_by_user %}</b>{% endif %}
-                    <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
-                </li>
+                {% include "object_events/partials/notification.html" %}
             {% endfor %}
         </ul>
         <button type="submit" name="bulk_mark" value="{% for notification in notifications %}{{ notification.pk }},{% endfor %}">{% trans "Mark all as read" %}</button>
