@@ -32,7 +32,7 @@ NOTIFICATION_INTERVALS = (
 
 
 class UserAggregationBase(object):
-    """Bass aggregation class to inherit from."""
+    """Base aggregation class to inherit from."""
     def get_users(self, interval):
         """Function to delegate user aggregation."""
         return getattr(self, 'get_{0}_users'.format(interval))()

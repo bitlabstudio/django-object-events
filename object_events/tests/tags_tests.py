@@ -26,7 +26,7 @@ class RenderNotificationsTestCase(TestCase):
         # Returns empty dict if there is no authenticated user
         self.assertEqual(render_notifications(context), {})
 
-        # Returns empty dict if there are no notifications
+        # If authenticated return an info
         request.user = UserFactory()
         self.assertEqual(render_notifications(context),
                          {'authenticated': True})

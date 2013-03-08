@@ -36,22 +36,18 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
 
     def test_view(self):
         self.is_not_callable(user=self.user)
-        self.is_callable(user=self.user, method='post',
+        self.is_callable(method='post',
                          and_redirects_to=reverse('object_events_list'))
 
         # ID is no integer
-        self.is_not_callable(
-            user=self.user, method='post', data={'single_mark': 'abc'})
+        self.is_not_callable(method='post', data={'single_mark': 'abc'})
 
         # ID is non-existant
-        self.is_not_callable(
-            user=self.user, method='post', data={'single_mark': 999})
+        self.is_not_callable(method='post', data={'single_mark': 999})
 
         # Successful post and redirect to custom url
-        self.is_callable(
-            user=self.user, method='post',
-            data={'single_mark': self.event.pk, 'next': '/test/'},
-            and_redirects_to='/test/')
+        self.is_callable(method='post', and_redirects_to='/test/',
+                         data={'single_mark': self.event.pk, 'next': '/test/'})
         self.assertTrue(ObjectEvent.objects.get(pk=self.event.pk).read_by_user)
 
         # Succesful single-mark AJAX post
@@ -60,22 +56,19 @@ class ObjectEventsMarkViewTestCase(ViewTestMixin, TestCase):
         self.assertEqual(resp.content, 'marked')
 
         # bulk_mark variable has no pk items
-        self.is_callable(
-            user=self.user, method='post', data={'bulk_mark': 'abc, x, []'},
-            and_redirects_to=reverse('object_events_list'))
+        self.is_callable(method='post', data={'bulk_mark': 'abc, x, []'},
+                         and_redirects_to=reverse('object_events_list'))
 
         # bulk_mark variable is an empty string
-        self.is_callable(
-            user=self.user, method='post', data={'bulk_mark': ''},
-            and_redirects_to=reverse('object_events_list'))
+        self.is_callable(method='post', data={'bulk_mark': ''},
+                         and_redirects_to=reverse('object_events_list'))
 
         # Successful bulk_mark post
         e2 = ObjectEventFactory(user=self.user)
         e3 = ObjectEventFactory(user=self.user)
-        self.is_callable(
-            user=self.user, method='post',
-            data={'bulk_mark': '{0}, {1}, '.format(e2.pk, e3.pk)},
-            and_redirects_to=reverse('object_events_list'))
+        self.is_callable(method='post',
+                         data={'bulk_mark': '{0}, {1}, '.format(e2.pk, e3.pk)},
+                         and_redirects_to=reverse('object_events_list'))
         self.assertTrue(ObjectEvent.objects.get(pk=e2.pk).read_by_user)
         self.assertTrue(ObjectEvent.objects.get(pk=e3.pk).read_by_user)
 
