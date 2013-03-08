@@ -16,6 +16,13 @@ class SendEventEmailsTestCase(TestCase):
     longMessage = True
 
     @raises(SystemExit)
+    def test_wrong_aggregation_class(self):
+        with self.settings(
+            OBJECT_EVENTS_USER_AGGREGATION_CLASS= \
+                'test_app.models.EmptyAggregation'):
+            call_command('send_event_emails', 'realtime')
+
+    @raises(SystemExit)
     def test_missing_argument(self):
         self.assertFalse(call_command('send_event_emails'))
 

@@ -22,7 +22,7 @@ from django.utils import timezone
 from django_libs.loaders import load_member_from_setting
 from django_libs.utils_email import send_email
 
-from ...models import ObjectEvent
+from ...models import ObjectEvent, UserAggregationBase
 from ... import app_settings
 
 
@@ -49,9 +49,15 @@ class Command(BaseCommand):
             raise CommandError('Please provide a valid interval argument'
                                ' (realtime, daily, weekly, monthly)')
         aggregation = load_member_from_setting(
-            'USER_AGGREGATION_CLASS', app_settings)
+            'USER_AGGREGATION_CLASS', app_settings)()
+        if not isinstance(aggregation, UserAggregationBase):
+            raise CommandError(
+                'Your user aggregation class must inherit UserAggregationBase')
         # Check interval argument and functions in the aggregation class.
-        users = getattr(aggregation(), 'get_users')(interval)
+        try:
+            users = getattr(aggregation, 'get_users')(interval)
+        except AttributeError:
+            raise CommandError('Function get_users() not defined.')
         if not users:
             print('No users to send a {0} email.'.format(interval))
             return
