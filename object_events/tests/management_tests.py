@@ -1,8 +1,8 @@
 """Tests for the management commands of the ``object_events`` app."""
-from django.conf import settings
 from django.contrib.auth.models import SiteProfileNotAvailable
 from django.core.management import call_command
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from mailer.models import Message
 from nose.tools import raises
@@ -15,86 +15,33 @@ class SendEventEmailsTestCase(TestCase):
     """Tests for the ``send_event_emails`` management command."""
     longMessage = True
 
-    def setUp(self):
-        settings.USER_AGGREGATION_CLASS = ('object_events.UserAggregation')
-        settings.AUTH_PROFILE_MODULE = 'test_app.TestProfile'
-
-    @raises(SystemExit)
-    def test_missing_aggregation_class(self):
-        # settings.USER_AGGREGATION_CLASS = False
-        # self.assertFalse(call_command('send_event_emails', 'realtime'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_wrong_aggregation_definition(self):
-        # settings.USER_AGGREGATION_CLASS = 'test'
-        # self.assertFalse(call_command('send_event_emails', 'realtime'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_wrong_aggregation_app(self):
-        # settings.USER_AGGREGATION_CLASS = 'test.Test'
-        # self.assertFalse(call_command('send_event_emails', 'realtime'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_wrong_aggregation_class(self):
-        # settings.USER_AGGREGATION_CLASS = 'test_app.Test'
-        # self.assertFalse(call_command('send_event_emails', 'realtime'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_missing_aggregation_function_realtime(self):
-        # settings.USER_AGGREGATION_CLASS = 'test_app.EmptyAggregation'
-        # self.assertFalse(call_command('send_event_emails', 'realtime'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_missing_aggregation_function_daily(self):
-        #settings.USER_AGGREGATION_CLASS = 'test_app.EmptyAggregation'
-        #self.assertFalse(call_command('send_event_emails', 'daily'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_missing_aggregation_function_weekly(self):
-        # settings.USER_AGGREGATION_CLASS = 'test_app.EmptyAggregation'
-        # self.assertFalse(call_command('send_event_emails', 'weekly'))
-        raise SystemExit
-
-    @raises(SystemExit)
-    def test_missing_aggregation_function_monthly(self):
-        # settings.USER_AGGREGATION_CLASS = 'test_app.EmptyAggregation'
-        # self.assertFalse(call_command('send_event_emails', 'monthly'))
-        raise SystemExit
-
     @raises(SystemExit)
     def test_missing_argument(self):
-        settings.USER_AGGREGATION_CLASS = ('object_events.UserAggregation')
         self.assertFalse(call_command('send_event_emails'))
 
     @raises(SiteProfileNotAvailable)
+    @override_settings(AUTH_PROFILE_MODULE=False)
     def test_missing_user_profile(self):
-        settings.AUTH_PROFILE_MODULE = False
         UserAggregation()
 
     @raises(SiteProfileNotAvailable)
+    @override_settings(AUTH_PROFILE_MODULE='test')
     def test_wrong_user_profile_definition(self):
-        settings.AUTH_PROFILE_MODULE = 'test'
         UserAggregation()
 
     @raises(SiteProfileNotAvailable)
+    @override_settings(AUTH_PROFILE_MODULE='test.Test')
     def test_wrong_user_profile_app(self):
-        settings.AUTH_PROFILE_MODULE = 'test.Test'
         UserAggregation()
 
     @raises(SiteProfileNotAvailable)
+    @override_settings(AUTH_PROFILE_MODULE='test_app.NonExistingProfile')
     def test_wrong_user_profile_model(self):
-        settings.AUTH_PROFILE_MODULE = 'test_app.NonExistingProfile'
         UserAggregation()
 
     @raises(SiteProfileNotAvailable)
+    @override_settings(AUTH_PROFILE_MODULE='test_app.WrongTestProfile')
     def test_user_profile_model_without_interval_field(self):
-        settings.AUTH_PROFILE_MODULE = 'test_app.WrongTestProfile'
         UserAggregation()
 
     def test_realtime(self):

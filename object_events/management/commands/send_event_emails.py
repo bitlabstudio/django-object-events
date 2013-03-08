@@ -16,9 +16,7 @@ of events (only for certain users).
 
 """
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import get_app
 from django.utils import timezone
 
 from django_libs.loaders import load_member_from_setting
@@ -53,10 +51,7 @@ class Command(BaseCommand):
         aggregation = load_member_from_setting(
             'USER_AGGREGATION_CLASS', app_settings)
         # Check interval argument and functions in the aggregation class.
-        try:
-            users = getattr(aggregation(), 'get_users')(interval)
-        except AttributeError:
-            raise CommandError('Function get_users() not defined.')
+        users = getattr(aggregation(), 'get_users')(interval)
         if not users:
             print('No users to send a {0} email.'.format(interval))
             return
