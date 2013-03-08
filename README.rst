@@ -97,12 +97,12 @@ below.
 Now, back to me. If you already created or are about to create a custom profile
 model with a key to Django's User model and an interval field, which provides
 these four options (realtime, daily, weekly, monthly), you can easily use our
-predefined class ``object_events.UserAggregation``.
+predefined class ``object_events.models.UserAggregation``.
 
 Use this profile as the general user profile (see setting AUTH_PROFILE_MODULE).
 
 If you want to create your own aggregation class, make sure to inherit from
-``object_events.UserAggregationBase``.
+``object_events.models.UserAggregationBase``.
 
 Now, call the management command manually or e.g. with cronjobs. Manually::
 
@@ -138,14 +138,14 @@ Settings
 OBJECT_EVENTS_USER_AGGREGATION_CLASS
 ++++++++++++++++++++++++++++++++++++
 
-Default: 'object_events.UserAggregation'
+Default: 'object_events.models.UserAggregation'
 
 This is a class, which lets you create custom function to aggregate all users,
 which should be notified. Therefore you can e.g. build a user profile, which
 contains an interval or rrule setting.
 
 Feel free to create custom functions and overrides. Just make sure to use the
-base class ``object_events.UserAggregationBase``.
+base class ``object_events.models.UserAggregationBase``.
 
 The following functions can be defined::
 

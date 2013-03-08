@@ -20,4 +20,3 @@ django-coverage
 django-jasmine
 selenium
 ipdb
-ipython
