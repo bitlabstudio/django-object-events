@@ -20,6 +20,9 @@ class TestProfile(models.Model):
     user = models.ForeignKey('auth.User')
     interval = models.CharField(max_length=20, choices=NOTIFICATION_INTERVALS)
 
+    def get_preferred_email(self):
+        return self.user.email
+
 
 class WrongTestProfile(models.Model):
     """Wrong enhanced ``User`` model to test profile import."""

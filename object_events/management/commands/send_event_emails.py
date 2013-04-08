@@ -29,17 +29,31 @@ from ... import app_settings
 class Command(BaseCommand):
     """Class for the send_event_emails admin command."""
     def send_mail_to_user(self, email_context, to):
-        """Function to send the digest to the user."""
-        send_email(
-            '',
-            {'event_types': email_context},
-            'object_events/email/subject.html',
-            'object_events/email/body.html',
-            'object_events/email/body_plain.html',
-            from_email=settings.FROM_EMAIL,
-            recipients=[to],
-        )
-        self.sent_emails += 1
+        """
+        Function to send the digest to the user.
+
+        First we check the preffered email of the User instance. You can
+        add this function in your defined User Profile. Therefore check
+        Django's AUTH_PROFILE_MODULE setting. If you haven't defined this
+        function or defined a Profile module the email of the User instance is
+        used.
+
+        """
+        email = to.email
+        if (hasattr(to, 'get_profile')
+                and hasattr(to.get_profile(), 'get_preferred_email')):
+            email = to.get_profile().get_preferred_email()
+        if email:
+            send_email(
+                '',
+                {'event_types': email_context},
+                'object_events/email/subject.html',
+                'object_events/email/body.html',
+                'object_events/email/body_plain.html',
+                from_email=settings.FROM_EMAIL,
+                recipients=[to],
+            )
+            self.sent_emails += 1
 
     def handle(self, interval='', **options):
         """Handles the send_event_emails admin command."""
@@ -72,7 +86,7 @@ class Command(BaseCommand):
         self.sent_emails = 0
         for object_event in object_events:
             if current_user != object_event.user and email_context:
-                self.send_mail_to_user(email_context, current_user.email)
+                self.send_mail_to_user(email_context, current_user)
                 email_context = {}
             current_user = object_event.user
             if email_context.get(object_event.event_type.title):
@@ -86,7 +100,7 @@ class Command(BaseCommand):
         # Send email even for the last user in the queryset, who cannot have
         # a follower
         if email_context:
-            self.send_mail_to_user(email_context, current_user.email)
+            self.send_mail_to_user(email_context, current_user)
         print('The command took {0} seconds to finish. Sent {1} emails for {2}'
               ' events.'.format((timezone.now() - start_of_command).seconds,
                                 self.sent_emails, object_events.count()))

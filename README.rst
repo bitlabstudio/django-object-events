@@ -121,7 +121,7 @@ connect your models to it via post_save signals. Whatever you will do, have fun
 with it!
 
 
-### Use with AJAX functions
+## Use with AJAX functions
 
 The basic functions like single_mark and bulk_mark can be easily used with
 AJAX. Just add the following files to your base.html.
@@ -167,6 +167,15 @@ model to Django's User model. As you can see in the setting
 OBJECT_EVENTS_USER_AGGREGATION_CLASS above you will have to provide User
 querysets, based on interval preferences. So create a custom model, which looks
 like the one in our test app to use our basic aggregation class.
+
+If you want to provide different or custom email addresses to the email
+notification command you can define a getter function called
+``get_preferred_email``, e.g.:
+
+    def get_preferred_email(self):
+        if self.email:
+            return self.email
+        return self.user.email
 
 
 OBJECT_EVENTS_PAGINATION_ITEMS
