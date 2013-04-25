@@ -1,7 +1,8 @@
 === (ongoing) ===
 
 - Added the possibility to define your own email aggregation function within
-the User profile
+  the User profile
+- Fixed bug in send_email call.
 
 === 0.2 ===
 
