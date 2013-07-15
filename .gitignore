@@ -4,4 +4,4 @@
 db.sqlite
 dist/
 media/
-static/
+app_static/
