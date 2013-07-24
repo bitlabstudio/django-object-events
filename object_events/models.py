@@ -115,7 +115,7 @@ class ObjectEventType(models.Model):
         ordering = ['title']
 
     def __unicode__(self):
-        return self.title
+        return u'{0}'.format(self.title)
 
 
 class ObjectEvent(models.Model):
@@ -210,7 +210,7 @@ class ObjectEvent(models.Model):
         return obj
 
     def __unicode__(self):
-        return '{0}'.format(self.content_object)
+        return u'{0}'.format(self.content_object)
 
     def get_timesince(self):
         delta = (now() - self.creation_date)
