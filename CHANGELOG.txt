@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+=== 0.4 ===
+
 - Fixed unicode problem
 
 === 0.3.1 ===
