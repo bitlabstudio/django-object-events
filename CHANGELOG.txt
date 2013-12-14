@@ -1,5 +1,9 @@
 === (ongoing) ===
 
+=== 0.5.1 ===
+
+- updated create_event method
+
 === 0.5 ===
 
 - added additional_text field

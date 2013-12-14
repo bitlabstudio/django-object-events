@@ -196,7 +196,7 @@ class ObjectEvent(models.Model):
 
     @staticmethod
     def create_event(user, content_object, event_content_object=None,
-                     event_type=''):
+                     event_type='', additional_text=''):
         """
         Creates an event for the given user, object and type.
 
@@ -207,15 +207,20 @@ class ObjectEvent(models.Model):
         :param content_object: The object this event is attached to.
         :param event_content_object: The object that was created by this event.
         :event_type: String representing the type of this event.
+        :additional_text: Additional text.
 
         """
         event_type_obj, created = ObjectEventType.objects.get_or_create(
             title=event_type)
-        obj = ObjectEvent(user=user, content_object=content_object,
-                          event_type=event_type_obj)
+        kwargs = {
+            'user': user,
+            'content_object': content_object,
+            'event_type': event_type_obj,
+            'additional_text': additional_text,
+        }
         if event_content_object is not None:
-            obj.event_content_object = event_content_object
-        obj.save()
+            kwargs.update({'event_content_object': event_content_object})
+        obj = ObjectEvent.objects.create(**kwargs)
         return obj
 
     def __unicode__(self):
