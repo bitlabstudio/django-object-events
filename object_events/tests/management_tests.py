@@ -18,8 +18,8 @@ class SendEventEmailsTestCase(TestCase):
     @raises(SystemExit)
     def test_wrong_aggregation_class(self):
         with self.settings(
-            OBJECT_EVENTS_USER_AGGREGATION_CLASS= \
-                'test_app.models.EmptyAggregation'):
+            OBJECT_EVENTS_USER_AGGREGATION_CLASS=('test_app.models.'
+                                                  'EmptyAggregation')):
             call_command('send_event_emails', 'realtime')
 
     @raises(SystemExit)

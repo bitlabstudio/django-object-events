@@ -9,27 +9,27 @@ from ..models import ObjectEvent, ObjectEventType
 from .test_app.models import DummyModel, TestProfile
 
 
-class DummyModelFactory(factory.Factory):
+class DummyModelFactory(factory.DjangoModelFactory):
     """Factory for the ``DummyModel`` model."""
     FACTORY_FOR = DummyModel
 
     name = 'Foobar'
 
 
-class TestProfileFactory(factory.Factory):
+class TestProfileFactory(factory.DjangoModelFactory):
     """Factory for the ``TestProfile`` model."""
     FACTORY_FOR = TestProfile
 
     user = factory.SubFactory(UserFactory)
 
 
-class ObjectEventTypeFactory(factory.Factory):
+class ObjectEventTypeFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ObjectEventType
 
     title = factory.Sequence(lambda x: 'event_type{0}'.format(x))
 
 
-class ObjectEventFactory(factory.Factory):
+class ObjectEventFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ObjectEvent
 
     user = factory.SubFactory(UserFactory)

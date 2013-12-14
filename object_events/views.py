@@ -56,9 +56,9 @@ class ObjectEventsMarkView(RedirectView):
             event_pks = request.POST.get('bulk_mark').split(',')
             event_pks = [n for n in event_pks if is_integer(n)]
             if event_pks:
-                ObjectEvent.objects.filter(
-                    pk__in=event_pks, user=request.user).update(
-                        read_by_user=True)
+                events = ObjectEvent.objects.filter(
+                    pk__in=event_pks, user=request.user)
+                events.update(read_by_user=True)
                 if request.is_ajax():
                     return HttpResponse('marked')
         return super(ObjectEventsMarkView, self).dispatch(request, *args,

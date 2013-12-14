@@ -133,6 +133,9 @@ class ObjectEvent(models.Model):
     :event_content_object: Generic foreign key to the object that has been
       created by this event. Leave this empty if the event did not create any
       object.
+    :additional_text: Plain text, which can be added to the notification,
+      object, e.g. if you want to inform somebody that something has been
+      deleted.
 
     """
     user = models.ForeignKey(
@@ -181,6 +184,12 @@ class ObjectEvent(models.Model):
     event_object_id = models.PositiveIntegerField(null=True, blank=True)
     event_content_object = generic.GenericForeignKey(
         'event_content_type', 'event_object_id')
+
+    additional_text = models.CharField(
+        max_length=128,
+        verbose_name=_('Additional text'),
+        blank=True,
+    )
 
     class Meta:
         ordering = ['-creation_date']

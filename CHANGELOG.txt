@@ -1,5 +1,10 @@
 === (ongoing) ===
 
+=== 0.5 ===
+
+- added additional_text field
+- prepared for factory_boy>=2.0.0
+
 === 0.4 ===
 
 - Fixed unicode problem
