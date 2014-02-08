@@ -48,10 +48,9 @@ class Command(BaseCommand):
                 '',
                 {'event_types': email_context},
                 'object_events/email/subject.html',
-                'object_events/email/body_plain.html',
                 'object_events/email/body.html',
-                from_email=settings.FROM_EMAIL,
-                recipients=[email],
+                settings.FROM_EMAIL,
+                [email],
             )
             self.sent_emails += 1
 
