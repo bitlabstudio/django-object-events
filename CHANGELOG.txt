@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+=== 0.6 ===
+
 - Updated to use latest django_libs with automated plaintext emails.
 
 === 0.5.1 ===
