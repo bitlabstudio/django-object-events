@@ -16,7 +16,7 @@ $(document).ready(function() {
         return false;
     });
     $('html').click(function() {
-        $('[data-class="notifications"]:visible').hide();
+        $('[data-id="top-notifications"]:visible').hide();
     });
     $('[data-class="notifications"]').click(function(event){
         event.stopPropagation();
@@ -63,7 +63,7 @@ $(document).ready(function() {
                     var unread_amount = $('[data-id="notification-unread"]').text();
 
                     // Remove all unread classes, though
-                    $('[data-class="notifications"] [data-class="notification"].unread').removeClass('unread');
+                    $('[data-class="notification"].unread').removeClass('unread');
                     if ((unread_amount - unread_notifs.length) <= 1) {
                         $('[data-id="notification-unread"]').removeClass('unread');
                     }
