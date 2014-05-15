@@ -45,7 +45,7 @@ class Command(BaseCommand):
             email = to.get_profile().get_preferred_email()
         if email:
             send_email(
-                '',
+                None,
                 {'event_types': email_context},
                 'object_events/email/subject.html',
                 'object_events/email/body.html',

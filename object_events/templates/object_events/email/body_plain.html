@@ -1,9 +1,0 @@
-{% load i18n %}
-{% trans "New updates have been made:" %}
-
-{% for key, value in event_types.items %}
-    {% for object_event in value %}
-        {{ object_event }}
-    {% endfor %}
-{% endfor %}
---
