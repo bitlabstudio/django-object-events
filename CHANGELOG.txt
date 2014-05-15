@@ -1,5 +1,9 @@
 === (ongoing) ===
 
+=== 1.0.1 ===
+
+- Renewed templates and static files.
+
 === 1.0 ===
 
 - Updated requirements.
