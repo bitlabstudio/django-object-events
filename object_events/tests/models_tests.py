@@ -42,11 +42,11 @@ class ObjectEventTestCase(TestCase):
     def test_get_timesince(self):
         # Just created object_event
         object_event = ObjectEventFactory()
-        self.assertEqual(object_event.get_timesince(), '0 minutes ago')
+        self.assertEqual(object_event.get_timesince(), u'0\xa0minutes ago')
 
         # 'Young' object_event
         object_event.creation_date = now() - timedelta(days=1)
-        self.assertEqual(object_event.get_timesince(), '1 day ago')
+        self.assertEqual(object_event.get_timesince(), u'1\xa0day ago')
 
         # 'Teen' object_event
         object_event.creation_date = now() - timedelta(days=5)

@@ -68,6 +68,27 @@ Usage
 If you want to use this app without sending event notifications you don't have
 to create settings or stuff. Simply use it, it's intuitive =)
 
+Basically it's all about adding the right template tag::
+
+    {% load object_events_tags %}
+    {% render_notifications 3 %}
+
+Then create some events. You might want to create a notification in your
+views, your forms or via signals. An example::
+
+    @receiver(comment_was_posted)
+    def comment_was_posted_signal_handler(sender, comment, request, **kwargs):
+        """Creates a notification for new comments."""
+        ObjectEvent.create_event(
+            user=comment.user, event_type='comment',
+            content_object=comment,
+            event_content_object=comment.content_object,
+            additional_text=_('(Comment posted)'),
+        )
+
+Sending emails
+++++++++++++++
+
 For email support make sure to install ``django-mailer`` (see requirements.txt)
 
 Make sure to add all email-related settings::
@@ -110,6 +131,8 @@ Now, call the management command manually or e.g. with cronjobs. Manually::
 
 With cronjobs for example:
 
+.. code-block:: bash
+
     * * * * * $HOME/webapps/$DJANGO_APP_NAME/myproject/manage.py send_event_emails realtime > $HOME/mylogs/cron/send_event_emails.log 2>&1
 
 Huh, cronjobs? If you are a bit server savvy connect to your server and type in
@@ -121,7 +144,8 @@ connect your models to it via post_save signals. Whatever you will do, have fun
 with it!
 
 
-## Use with AJAX functions
+Use with AJAX functions
++++++++++++++++++++++++
 
 The basic functions like single_mark and bulk_mark can be easily used with
 AJAX. Just add the following files to your base.html.

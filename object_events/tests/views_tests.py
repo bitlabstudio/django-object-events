@@ -5,8 +5,8 @@ from django.test import TestCase
 from django_libs.tests.factories import UserFactory
 from django_libs.tests.mixins import ViewTestMixin
 
-from ..factories import ObjectEventFactory
-from ...models import ObjectEvent
+from .factories import ObjectEventFactory
+from ..models import ObjectEvent
 
 
 class ObjectEventsListViewTestCase(ViewTestMixin, TestCase):

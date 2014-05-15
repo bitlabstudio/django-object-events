@@ -1,6 +1,6 @@
 """Tests for the management commands of the ``object_events`` app."""
 from django.contrib.auth.models import SiteProfileNotAvailable
-from django.core.management import call_command
+from django.core.management import call_command, CommandError
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -15,14 +15,14 @@ class SendEventEmailsTestCase(TestCase):
     """Tests for the ``send_event_emails`` management command."""
     longMessage = True
 
-    @raises(SystemExit)
+    @raises(CommandError)
     def test_wrong_aggregation_class(self):
         with self.settings(
             OBJECT_EVENTS_USER_AGGREGATION_CLASS=('test_app.models.'
                                                   'EmptyAggregation')):
             call_command('send_event_emails', 'realtime')
 
-    @raises(SystemExit)
+    @raises(CommandError)
     def test_missing_argument(self):
         self.assertFalse(call_command('send_event_emails'))
 

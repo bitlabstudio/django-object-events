@@ -1,7 +1,8 @@
 """Dummy models to be used in test cases of the ``object_events`` app."""
+from django.conf import settings
 from django.db import models
 
-from object_events.models import NOTIFICATION_INTERVALS
+from object_events.models import UserAggregationBase, NOTIFICATION_INTERVALS
 
 
 class DummyModel(models.Model):
@@ -17,7 +18,7 @@ class TestProfile(models.Model):
     :interval: Setting to define the notification interval.
 
     """
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     interval = models.CharField(max_length=20, choices=NOTIFICATION_INTERVALS)
 
     def get_preferred_email(self):

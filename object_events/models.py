@@ -139,7 +139,7 @@ class ObjectEvent(models.Model):
 
     """
     user = models.ForeignKey(
-        'auth.User',
+        settings.AUTH_USER_MODEL,
         verbose_name=_('User'),
         related_name='object_events',
         null=True, blank=True,
@@ -229,7 +229,7 @@ class ObjectEvent(models.Model):
     def get_timesince(self):
         delta = (now() - self.creation_date)
         if delta.days <= 1:
-            return '{0} ago'.format(timesince(self.creation_date, now()))
+            return u'{} ago'.format(timesince(self.creation_date, now()))
         if self.creation_date.year != now().year:
             return date(self.creation_date, 'd F Y')
         return date(self.creation_date, 'd F')

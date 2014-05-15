@@ -1,7 +1,14 @@
 """Settings that need to be set in order to run the tests."""
+import logging
 import os
 
+logging.getLogger("factory").setLevel(logging.WARN)
+
+SECRET_KEY = 'foobar'
+
 DEBUG = True
+
+AUTH_USER_MODEL = 'auth.User'
 
 SITE_ID = 1
 

@@ -67,10 +67,7 @@ class Command(BaseCommand):
             raise CommandError(
                 'Your user aggregation class must inherit UserAggregationBase')
         # Check interval argument and functions in the aggregation class.
-        try:
-            users = getattr(aggregation, 'get_users')(interval)
-        except AttributeError:
-            raise CommandError('Function get_users() not defined.')
+        users = getattr(aggregation, 'get_users')(interval)
         if not users:
             print('No users to send a {0} email.'.format(interval))
             return
