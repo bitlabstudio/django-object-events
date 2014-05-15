@@ -1,24 +1,24 @@
 function checkUnreadNotifications() {
-    if ($('.notifications li.unread').length == 0) {
+    if ($('[data-class="notification"].unread').length == 0) {
         // Hide bulk button, if there are no unread notifications.
-        $('button[name="bulk_mark"]').parents('li').hide();
+        $('button[name="bulk_mark"]').parents('[data-class="notification"]').hide();
     }
 }
 
 $(document).ready(function() {
-    $('#notificationBar').hide();
-    $('#notificationBtn').click(function() {
-        $('#notificationBar').show();
+    $('[data-class="notifications"]').hide();
+    $('[data-class="notification-btn"]').click(function() {
+        $('[data-class="notifications"]').show();
         return false;
     });
     $('html').click(function() {
-        $('#notificationBar:visible').hide();
+        $('[data-class="notifications"]:visible').hide();
     });
-    $('#notificationBar').click(function(event){
+    $('[data-class="notifications"]').click(function(event){
         event.stopPropagation();
     });
     checkUnreadNotifications();
-    $('.notifications li').click(function() {
+    $('[data-class="notification"]').click(function() {
         var notif = $(this);
         if (notif.hasClass('unread')) {
             var form = notif.parents('form');
@@ -32,18 +32,18 @@ $(document).ready(function() {
                     if (data == 'marked') {
                         notif.removeClass('unread');
                         // Decrease notification counter
-                        var unread_amount = $('#notificationBtn .badge').text();
+                        var unread_amount = $('[data-id="notification-unread"]').text();
                         if (unread_amount <= 1) {
-                            $('#notificationBtn .badge').removeClass('badge-important');
+                            $('[data-id="notification-unread"]').removeClass('unread');
                         }
-                        $('#notificationBtn .badge').text(unread_amount - 1);
+                        $('[data-id="notification-unread"]').text(unread_amount - 1);
                         checkUnreadNotifications();
                     }
                 }
             );
         }
     });
-    $('.notifications button[name="bulk_mark"]').click(function() {
+    $('[data-class="notifications"] button[name="bulk_mark"]').click(function() {
         var form = $(this).parents('form');
         $.post(
             form.attr('action')
@@ -55,15 +55,15 @@ $(document).ready(function() {
                 if (data == 'marked') {
                     // Get only unread notifications from first notification wrapper
                     // In case you are watching both, list view and tag, only one of them is tracked
-                    var unread_notifs = $('.notifications').first().find('li.unread');
-                    var unread_amount = $('#notificationBtn .badge').text();
+                    var unread_notifs = $('[data-class="notifications"]').first().find('[data-class="notification"].unread');
+                    var unread_amount = $('[data-id="notification-unread"]').text();
 
                     // Remove all unread classes, though
-                    $('.notifications li.unread').removeClass('unread');
+                    $('[data-class="notifications"] [data-class="notification"].unread').removeClass('unread');
                     if ((unread_amount - unread_notifs.length) <= 1) {
-                        $('#notificationBtn .badge').removeClass('badge-important');
+                        $('[data-id="notification-unread"]').removeClass('unread');
                     }
-                    $('#notificationBtn .badge').text(unread_amount - unread_notifs.length);
+                    $('[data-id="notification-unread"]').text(unread_amount - unread_notifs.length);
                     checkUnreadNotifications();
                 }
             }

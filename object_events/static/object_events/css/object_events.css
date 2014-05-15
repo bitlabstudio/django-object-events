@@ -2,12 +2,12 @@
     display: none;
 }
 
-.notifications li.unread {
+.notifications .notification.unread {
     cursor: pointer;
     font-weight: bold;
 }
 
-#notificationBtn {
+#notification-btn {
     background-color: rgb(245, 245, 245);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -26,7 +26,7 @@
     white-space: nowrap;
 }
 
-#notificationBtn .badge {
+#notification-unread {
     background-color: rgb(153, 153, 153);
     border-bottom-left-radius: 9px;
     border-bottom-right-radius: 9px;
@@ -51,6 +51,6 @@
     width: auto;
 }
 
-#notificationBtn .badge.badge-important {
+#notification-btn .unread {
     background-color: rgb(170, 70, 70);
 }

@@ -1,11 +1,10 @@
 {% load i18n %}
-{% load url from future %}
 {% if authenticated %}
-    <a id="notificationBtn" class="btn" href="{% url "object_events_list" %}">
-        <span class="badge{% if unread_amount > 0 %} badge-important{% endif %}">{{ unread_amount }}</span>
+    <a data-id="notification-btn" href="{% url "object_events_list" %}">
+        <span data-id="notification-unread" class="{% if unread_amount > 0 %}unread{% endif %}">{{ unread_amount }}</span>
         {% trans "Notifications" %}
     </a>
-    <form action="{% url "object_events_mark" %}" method="post" class="notifications" id="notificationBar">
+    <form action="{% url "object_events_mark" %}" method="post" class="notifications" data-class="notifications">
         {% csrf_token %}
         <ul>
             {% for notification in notifications %}

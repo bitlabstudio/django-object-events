@@ -57,6 +57,10 @@ Add the app to your ``INSTALLED_APPS``::
         'object_events',
     ]
 
+Include the app's urls::
+
+    url(r'^notifications/', include('object_events.urls')),
+
 Run the south migrations to create the app's database tables::
 
     $ ./manage.py migrate object_events

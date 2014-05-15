@@ -1,5 +1,5 @@
 {% load i18n %}
-<li {% if not notification.read_by_user %}class="unread"{% endif %}>
+<li data-class="notification" class="notification" {% if not notification.read_by_user %}class="unread"{% endif %}>
     {{ notification }} - {{ notification.get_timesince }}
     <button type="submit" name="single_mark" value="{{ notification.pk }}">{% trans "Mark as read" %}</button>
 </li>
