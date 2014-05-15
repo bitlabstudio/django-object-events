@@ -6,9 +6,13 @@ function checkUnreadNotifications() {
 }
 
 $(document).ready(function() {
-    $('[data-class="notifications"]').hide();
-    $('[data-class="notification-btn"]').click(function() {
-        $('[data-class="notifications"]').show();
+    $('[data-id="top-notifications"]').hide();
+    $('[data-id="notification-btn"]').click(function() {
+        if ($('[data-id="top-notifications"]').is(':visible')) {
+            $('[data-id="top-notifications"]').hide();
+        } else {
+            $('[data-id="top-notifications"]').show();
+        }
         return false;
     });
     $('html').click(function() {

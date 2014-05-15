@@ -154,8 +154,8 @@ Use with AJAX functions
 The basic functions like single_mark and bulk_mark can be easily used with
 AJAX. Just add the following files to your base.html.
 
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}object_events/css/object_events.css">
-    <script type="text/javascript" src="{{ STATIC_URL }}object_events/js/object_events.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "object_events/css/object_events.css" %}">
+    <script type="text/javascript" src="{% static "object_events/js/object_events.js" %}"></script>
 
 The css and the js file are already imported in the objectevent_list.html
 template.

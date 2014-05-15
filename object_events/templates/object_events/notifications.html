@@ -4,7 +4,7 @@
         <span data-id="notification-unread" class="{% if unread_amount > 0 %}unread{% endif %}">{{ unread_amount }}</span>
         {% trans "Notifications" %}
     </a>
-    <form action="{% url "object_events_mark" %}" method="post" class="notifications" data-class="notifications">
+    <form action="{% url "object_events_mark" %}" method="post" class="notifications" data-id="top-notifications" data-class="notifications">
         {% csrf_token %}
         <ul>
             {% for notification in notifications %}

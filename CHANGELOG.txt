@@ -1,5 +1,9 @@
 === (ongoing) ===
 
+=== 1.0.2 ===
+
+- Improved and fixed js stuff.
+
 === 1.0.1 ===
 
 - Renewed templates and static files.

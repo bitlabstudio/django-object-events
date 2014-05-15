@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %}{% trans "Notifications" %}{% endblock %}
+
 {% block main %}
 <h1>{% trans "Notifications" %}</h1>
 <form action="{% url "object_events_mark" %}" method="post" class="notifications" data-class="notifications">
