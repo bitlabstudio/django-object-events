@@ -1,5 +1,8 @@
 === (ongoing) ===
 
+- Added possibility to change template name used by the render_notifications
+  tag
+
 === 1.0.3 ===
 
 - Fixed small issue in js file.
