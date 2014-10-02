@@ -1,5 +1,9 @@
 === (ongoing) ===
 
+=== 1.0.5 ===
+
+- Fixed template tag output
+
 === 1.0.4 ===
 
 - Added possibility to change template name used by the render_notifications
