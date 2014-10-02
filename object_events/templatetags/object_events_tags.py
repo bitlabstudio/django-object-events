@@ -14,14 +14,12 @@ def render_notifications(context, notification_amount=8, template_name=None):
         template_name = 'object_events/notifications.html'
     if context.get('request') and context['request'].user.is_authenticated():
         events = ObjectEvent.objects.filter(user=context['request'].user)
+        ctx = {
+            'authenticated': True,
+            'request': context['request'],
+            'unread_amount': events.filter(read_by_user=False).count(),
+        }
         if events:
-            ctx = {
-                'authenticated': True,
-                'request': context['request'],
-                'unread_amount': events.filter(read_by_user=False).count(),
-                'notifications': events[:notification_amount],
-            }
-        else:
-            ctx = {'authenticated': True}
+            ctx.update({'notifications': events[:notification_amount]})
     t = template.loader.get_template(template_name)
     return t.render(template.Context(ctx))

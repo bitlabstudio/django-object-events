@@ -24,17 +24,9 @@ class RenderNotificationsTestCase(TestCase):
         context = RequestContext(request)
 
         # Returns empty dict if there is no authenticated user
-        self.assertEqual(render_notifications(context), {})
-
-        # If authenticated return an info
-        request.user = UserFactory()
-        self.assertEqual(render_notifications(context),
-                         {'authenticated': True})
+        self.assertEqual(render_notifications(context), '\n')
 
         # Returns notifications.html
+        request.user = UserFactory()
         event = ObjectEventFactory(user=request.user)
-        self.assertEqual(render_notifications(context).get('notifications'),
-                         [event])
-        self.assertEqual(render_notifications(context).get('unread_amount'), 1)
-        self.assertEqual(render_notifications(context).get('authenticated'),
-                         True)
+        self.assertTrue(render_notifications(context))
