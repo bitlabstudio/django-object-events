@@ -18,6 +18,7 @@ of events (only for certain users).
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
+from django.utils.translation import activate
 
 from django_libs.loaders import load_member_from_setting
 from django_libs.utils_email import send_email
@@ -40,9 +41,11 @@ class Command(BaseCommand):
 
         """
         email = to.email
-        if (hasattr(to, 'get_profile')
-                and hasattr(to.get_profile(), 'get_preferred_email')):
-            email = to.get_profile().get_preferred_email()
+        if hasattr(to, 'get_profile'):
+            if hasattr(to.get_profile(), 'language'):
+                activate(to.get_profile().language)
+            if hasattr(to.get_profile(), 'get_preferred_email'):
+                email = to.get_profile().get_preferred_email()
         if email:
             send_email(
                 None,
@@ -58,7 +61,7 @@ class Command(BaseCommand):
         """Handles the send_event_emails admin command."""
         # Check if there is an aggregation class defined.
         start_of_command = timezone.now()
-        if not interval in ('realtime', 'daily', 'weekly', 'monthly'):
+        if interval not in ('realtime', 'daily', 'weekly', 'monthly'):
             raise CommandError('Please provide a valid interval argument'
                                ' (realtime, daily, weekly, monthly)')
         aggregation = load_member_from_setting(

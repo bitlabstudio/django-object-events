@@ -147,6 +147,20 @@ Now you're free to work with this app, like, appending it to your project and
 connect your models to it via post_save signals. Whatever you will do, have fun
 with it!
 
+Translation of emails
++++++++++++++++++++++
+
+If you want your emails to be translated in the user's preferred language, just
+add a language field to the profile model. For example:
+
+.. code-block:: python
+
+    language = models.CharField(
+        max_length=10,
+        choices=settings.LANGUAGES,
+        verbose_name=_('Language'),
+        default=settings.LANGUAGES[0][0],
+    )
 
 Use with AJAX functions
 +++++++++++++++++++++++

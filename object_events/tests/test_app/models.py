@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.db import models
 
-from object_events.models import UserAggregationBase, NOTIFICATION_INTERVALS
+from object_events.models import NOTIFICATION_INTERVALS
 
 
 class DummyModel(models.Model):
@@ -20,6 +20,8 @@ class TestProfile(models.Model):
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     interval = models.CharField(max_length=20, choices=NOTIFICATION_INTERVALS)
+    language = models.CharField(max_length=10, choices=settings.LANGUAGES,
+                                default=settings.LANGUAGES[0][0])
 
     def get_preferred_email(self):
         return self.user.email

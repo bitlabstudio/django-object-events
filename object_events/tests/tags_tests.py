@@ -28,5 +28,5 @@ class RenderNotificationsTestCase(TestCase):
 
         # Returns notifications.html
         request.user = UserFactory()
-        event = ObjectEventFactory(user=request.user)
+        ObjectEventFactory(user=request.user)
         self.assertTrue(render_notifications(context))
