@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+=== 1.2 ===
+
 - Mark alle existing events as marked after using bulk mark
 
 === 1.1 ===
