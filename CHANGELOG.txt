@@ -1,5 +1,7 @@
 === (ongoing) ===
 
+- Mark alle existing events as marked after using bulk mark
+
 === 1.1 ===
 
 - Added option to translate emails
