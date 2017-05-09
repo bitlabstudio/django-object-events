@@ -1,7 +1,7 @@
 """Models for the ``object_events`` app."""
+from django import VERSION
 from django.conf import settings
-from django.contrib.auth.models import SiteProfileNotAvailable
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.template.defaultfilters import date
@@ -9,6 +9,11 @@ from django.utils.timesince import timesince
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
+if VERSION < (1, 7, 0):
+    from django.contrib.auth.models import SiteProfileNotAvailable
+if VERSION >= (1, 7, 0):
+    class SiteProfileNotAvailable(Exception):
+        pass
 
 """
 Interval the user will be notified.
@@ -33,6 +38,7 @@ NOTIFICATION_INTERVALS = (
 
 class UserAggregationBase(object):
     """Base aggregation class to inherit from."""
+
     def get_users(self, interval):
         """Function to delegate user aggregation."""
         return getattr(self, 'get_{0}_users'.format(interval))()
@@ -56,6 +62,7 @@ class UserAggregationBase(object):
 
 class UserAggregation(UserAggregationBase):
     """Class to aggregate 'realtime', 'daily', 'weekly', 'monthly' users."""
+
     def __init__(self):
         """Checks if there's a user profile."""
         if not getattr(settings, 'AUTH_PROFILE_MODULE', False):
@@ -173,7 +180,7 @@ class ObjectEvent(models.Model):
         null=True, blank=True
     )
     object_id = models.PositiveIntegerField(null=True, blank=True)
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     # Generic FK to the object that got created by this event
     event_content_type = models.ForeignKey(
@@ -182,7 +189,7 @@ class ObjectEvent(models.Model):
         null=True, blank=True
     )
     event_object_id = models.PositiveIntegerField(null=True, blank=True)
-    event_content_object = generic.GenericForeignKey(
+    event_content_object = GenericForeignKey(
         'event_content_type', 'event_object_id')
 
     additional_text = models.CharField(
